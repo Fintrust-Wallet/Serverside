@@ -10,8 +10,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleEvents = void 0;
+const enumerations_1 = require("../../models/enumerations");
+const helpers_1 = require("../../utils/helpers");
 const web3storage_1 = require("../../utils/web3storage");
 const campaignService_1 = require("./campaignService");
+const TransactionService_1 = require("./TransactionService");
 const ethers = require("ethers");
 const abi = require("../../contract/ABI/fintrust.json");
 require("dotenv").config();
@@ -38,8 +41,27 @@ function handleEvents() {
                 description: campaignInfo.campaignDescription,
                 media: campaignInfo.images
             };
-            console.log(request, "REQUEST");
             yield (0, campaignService_1.createCampaign)(request);
+        }));
+        contract.on("Donated", (campaignId, sender, timestamp, amount, event) => __awaiter(this, void 0, void 0, function* () {
+            const request = {
+                campaignId,
+                sender,
+                type: enumerations_1.TransactionType.donate,
+                amount,
+                timeStamp: (0, helpers_1.createDate)(timestamp)
+            };
+            yield (0, TransactionService_1.createTransaction)(request);
+        }));
+        contract.on("WithDrawn", (campaignId, sender, timestamp, amount, event) => __awaiter(this, void 0, void 0, function* () {
+            const request = {
+                campaignId,
+                sender,
+                type: enumerations_1.TransactionType.withdraw,
+                amount,
+                timeStamp: (0, helpers_1.createDate)(timestamp)
+            };
+            yield (0, TransactionService_1.createTransaction)(request);
         }));
     });
 }

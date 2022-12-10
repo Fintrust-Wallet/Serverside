@@ -21,7 +21,11 @@ const createCampaign = (request, signatories = []) => __awaiter(void 0, void 0, 
         uri: request.url,
         amount: request.amount,
         type: request.campaignType,
-        signatories: signatories
+        signatories: signatories,
+        description: request.description,
+        title: request.title,
+        media: request.media,
+        campaignType: request.campaignType
     });
     return yield campaign.save();
 });

@@ -23,63 +23,25 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.campaignSchema = void 0;
+exports.withdrawRequestSchema = void 0;
+const joi_1 = require("joi");
 const mongoose_1 = __importStar(require("mongoose"));
 const enumerations_1 = require("./enumerations");
-const TransactionModel_1 = require("./TransactionModel");
-exports.campaignSchema = new mongoose_1.Schema({
-    _id: {
-        type: String,
-        required: true,
-        trim: true,
-        unique: true
-    },
-    title: {
-        type: String,
-        required: true,
-        trim: true,
-        unique: true
-    },
-    description: {
-        type: String,
-        required: true,
-        trim: true
-    },
-    media: {
-        type: [String],
-        required: false
-    },
-    userId: {
+const interfaces_1 = require("./interfaces");
+exports.withdrawRequestSchema = new mongoose_1.Schema({
+    campaign: {
         type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: "User",
-        required: true
-    },
-    uri: {
-        type: String,
+        ref: "Campaign",
         required: true,
-        trim: true,
-        unique: true
     },
-    signatories: {
-        type: [String],
-        trim: true
+    confirmations: {
+        type: joi_1.number,
+        default: 0
     },
-    balance: Number,
-    deposited: Number,
-    amount: Number,
-    withdrawAccount: {
-        type: String,
-        trim: true
+    status: {
+        type: enumerations_1.TransactionState,
+        default: enumerations_1.TransactionState.pending
     },
-    state: {
-        type: enumerations_1.CampaignState,
-        default: enumerations_1.CampaignState.created
-    },
-    campaignType: {
-        type: enumerations_1.CampaignType,
-        required: true
-    },
-    transactions: [TransactionModel_1.transactionSchema],
     createdAt: {
         type: Date,
         default: Date.now().toLocaleString()
@@ -88,5 +50,8 @@ exports.campaignSchema = new mongoose_1.Schema({
         type: Date,
         default: Date.now().toLocaleString()
     },
+    signers: {
+        type: [interfaces_1.Signer]
+    }
 });
-exports.default = (0, mongoose_1.model)("Campaign", exports.campaignSchema);
+exports.default = mongoose_1.default.model("WithdrawRequest", exports.withdrawRequestSchema);

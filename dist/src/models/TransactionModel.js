@@ -26,21 +26,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.transactionSchema = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
 const enumerations_1 = require("./enumerations");
-const userModel_1 = require("./userModel");
 exports.transactionSchema = new mongoose_1.Schema({
-    user: {
-        type: userModel_1.userSchema,
+    userId: {
+        type: mongoose_1.default.Schema.Types.ObjectId,
+        ref: "User",
         required: true,
-        trim: true
+        trim: true //add user emal or wallet address
     },
-    // campaign: {
-    //     type: campaignSchema,
-    //     required: true,
-    //     trim: true
-    // },
+    campaign: {
+        type: mongoose_1.default.Schema.Types.ObjectId,
+        ref: "Campaign",
+        required: true,
+    },
     createdAt: {
         type: Date,
-        default: Date.now().toLocaleString()
     },
     updatedAt: {
         type: Date,

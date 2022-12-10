@@ -6,7 +6,9 @@
   "scripts": {
     "test": "nodemon test",
     "dev": "npx tsc && nodemon dist/index.js",
-    "build" : "npx tsc && node index.ts"
+    "build": "node dist/index.js",
+    "start": "node dist/index.js"
+
   },
   "repository": {
     "type": "git",

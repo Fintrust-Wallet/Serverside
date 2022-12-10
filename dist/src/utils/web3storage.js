@@ -69,4 +69,3 @@ const getFiles = (cid) => __awaiter(void 0, void 0, void 0, function* () {
     return null;
 });
 exports.getFiles = getFiles;
-(0, exports.getFiles)("bafybeigj2b2wm2lqktihkkhxosnyutpxbsnvvb22uvjvdlu2bjbobr6cnm");
