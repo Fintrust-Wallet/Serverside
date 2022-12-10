@@ -1,4 +1,4 @@
-import { handleEvents } from "../controller/services/eventhandler";
+//import { handleEvents } from "../controller/services/eventhandler";
 
 const cors = require("cors");
 const express = require("express");
@@ -9,7 +9,7 @@ const User = require("../models/userModel");
 
 const logger = require("./logger");
 const routes = require("../routes");
-const { PORT } = require("../config/env");
+const {secrets: {PORT}} = require("../config/env");
 const { database } = require("../config/database");
 
 export class SetupServer {
@@ -21,7 +21,7 @@ export class SetupServer {
      * same as this.port = port, declaring as private here will
      * add the port variable to the SetupServer instance
      */
-    constructor(port = PORT) {
+    constructor(port = PORT) {       
         this.port = port;
     }
 
@@ -77,7 +77,7 @@ export class SetupServer {
                 message: "Welcome to Role Based Sytem",
             })
         );
-        this.app.use("/v1.0/api", routes);
+        this.app.use("/v1.0/api", routes.userroutes);
         this.app.all("*", (req, res) => res.send({ message: "route not found" }));
     }
 
@@ -112,7 +112,7 @@ export class SetupServer {
     start() {
         this.server = this.app.listen(this.port || 4001, () => {
             logger.info("Server listening on port: " + this.port);
-            handleEvents();
+            //handleEvents();
         });
     }
 }

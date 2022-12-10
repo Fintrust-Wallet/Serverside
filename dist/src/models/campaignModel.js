@@ -26,7 +26,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.campaignSchema = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
 const enumerations_1 = require("./enumerations");
-const TransactionModel_1 = require("./TransactionModel");
+//import { transactionSchema } from "./TransactionModel";
 exports.campaignSchema = new mongoose_1.Schema({
     _id: {
         type: String,
@@ -79,7 +79,7 @@ exports.campaignSchema = new mongoose_1.Schema({
         type: enumerations_1.CampaignType,
         required: true
     },
-    transactions: [TransactionModel_1.transactionSchema],
+    // transactions: [transactionSchema],
     createdAt: {
         type: Date,
         default: Date.now().toLocaleString()

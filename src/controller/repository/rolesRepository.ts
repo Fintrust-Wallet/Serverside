@@ -6,10 +6,10 @@ exports.roles = (function () {
 
     ac.grant("user").extend("visitor").readAny("profile");
 
-    ac.grant("admin")
-        .extend("owner")
-        .updateAny("profile")
-        .deleteAny("profile");
+    // ac.grant("admin")
+    //     .extend("owner")
+    //     .updateAny("profile")
+    //     .deleteAny("profile");
 
     return ac;
 })();

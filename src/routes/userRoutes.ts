@@ -8,4 +8,4 @@ const userRouter = Router();
 userRouter.post("/users", services.login);
 userRouter.put("/users/:walletAddress", auth.allowIfLoggedIn, services.updateProfile);
 
-export { userRouter };
+module.exports = userRouter;
