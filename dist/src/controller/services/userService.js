@@ -1,4 +1,3 @@
-"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -8,11 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const userModel_1 = __importDefault(require("../../models/userModel"));
+const _user = require("../../models/userModel");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 //Get types from expreeess -> response, request etc
@@ -26,14 +21,18 @@ function validatePassword(passwordHash, plainPassword) {
         return yield bcrypt.compare(plainPassword, passwordHash);
     });
 }
-exports.signup = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.signup = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
     try {
-        const { email, password, role } = req.body;
+        const { email, password, role, walletAddress } = req.body;
+        if (!walletAddress || !password) {
+            res.status(400).send("Wallet address and password are required!");
+        }
         const passwordHash = yield hashPassword(password);
-        const newUser = new userModel_1.default({
+        const newUser = new _user({
             email,
+            _id: walletAddress,
             password: passwordHash,
-            role: role || "basic",
+            role: role || "visitor",
         });
         const accessToken = jwt.sign({
             userId: newUser._id,
@@ -49,23 +48,23 @@ exports.signup = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
         next(err);
     }
 });
-exports.authenticate = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.authenticate = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
     const error = "Invalid Email or Password";
     try {
         const { password, email } = req.body;
-        let user = yield userModel_1.default.findOne({ email });
+        let user = yield _user.findOne({ email });
         if (!user) {
             return next(new Error(error));
         }
         // validPassword = await validatePassword(user.password, password);
-        const validPassword = "";
-        if (!validPassword) {
-            return next(new Error(error));
-        }
+        // const validPassword = "";
+        // if (!validPassword) {
+        //     return next(new Error(error));
+        // }
         const accessToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
             expiresIn: "1d",
         });
-        yield userModel_1.default.findByIdAndUpdate(user._id, { accessToken });
+        yield _user.findByIdAndUpdate(user._id, { accessToken });
         res.status(200).json({
             data: { email: user.email, role: user.role },
             accessToken,
@@ -75,21 +74,22 @@ exports.authenticate = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
         next(err);
     }
 });
-exports.login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+//Current
+exports.login = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
     try {
         const { walletAddress } = req.body;
         //Validate wallet Address
-        let user = yield userModel_1.default.findById(walletAddress);
-        if (!user) {
-            user = new userModel_1.default({
+        let currentUser = yield _user.findById(walletAddress);
+        if (!currentUser) {
+            currentUser = new _user({
                 _id: walletAddress
             });
-            user = yield user.save();
+            currentUser = yield currentUser.save();
         }
         const accessToken = jwt.sign({ walletAddress }, process.env.JWT_SECRET, { expiresIn: "1d" });
-        yield userModel_1.default.findByIdAndUpdate(user._id, { accessToken });
+        yield _user.findByIdAndUpdate(currentUser._id, { accessToken });
         res.status(200).json({
-            data: user,
+            data: currentUser,
             accessToken,
         });
     }
@@ -97,14 +97,33 @@ exports.login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
         next(error);
     }
 });
-exports.updateProfile = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.updateProfile = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
     try {
-        const { alias: userName, email, withdrawAccount } = req.body;
+        const { userName, email, withdrawAccount } = req.body;
         const { walletAddress } = req.params;
-        const user = userModel_1.default.findByIdAndUpdate({
-            walletAddress
-        }, { email, userName, withdrawAccount, role: "user" });
-        res.status(200).send(user);
+        if (!userName || !email || !withdrawAccount || !walletAddress) {
+            res.status(400).json({
+                Status: false,
+                Message: "Invalid input"
+            });
+        }
+        try {
+            const user = yield _user.findByIdAndUpdate({
+                _id: walletAddress
+            }, { email, userName, withdrawAccount, role: "user" });
+            if (!user) {
+                res.status(400).send("Invalid wallet address");
+            }
+        }
+        catch (error) {
+            let message = error.message.toLowerCase();
+            if (message.includes("duplicate") && message.includes("username"))
+                throw new Error("UserName already exists");
+            if (message.includes("duplicate") && message.includes("email"))
+                throw new Error("Email already exists");
+            throw error;
+        }
+        res.status(200).send("Success");
     }
     catch (error) {
         next(error);

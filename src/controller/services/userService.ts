@@ -1,4 +1,4 @@
-import User from "../../models/userModel"
+const _user = require("../../models/userModel");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 //Get types from expreeess -> response, request etc
@@ -13,13 +13,18 @@ async function validatePassword(passwordHash, plainPassword) {
 
 exports.signup = async (req, res, next) => {
     try {
-        const { email, password, role } = req.body;
+        const { email, password, role, walletAddress } = req.body;
+
+        if (!walletAddress || !password) {
+            res.status(400).send("Wallet address and password are required!")
+        }
         const passwordHash = await hashPassword(password);
 
-        const newUser = new User({
+        const newUser = new _user({
             email,
+            _id: walletAddress,
             password: passwordHash,
-            role: role || "basic",
+            role: role || "visitor",
         });
 
         const accessToken = jwt.sign(
@@ -47,24 +52,24 @@ exports.authenticate = async (req, res, next) => {
     try {
         const { password, email } = req.body;
 
-        let user = await User.findOne({ email });
+        let user = await _user.findOne({ email });
 
         if (!user) {
             return next(new Error(error));
         }
 
         // validPassword = await validatePassword(user.password, password);
-        const validPassword = "";
+        // const validPassword = "";
 
-        if (!validPassword) {
-            return next(new Error(error));
-        }
+        // if (!validPassword) {
+        //     return next(new Error(error));
+        // }
 
         const accessToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
             expiresIn: "1d",
         });
 
-        await User.findByIdAndUpdate(user._id, { accessToken });
+        await _user.findByIdAndUpdate(user._id, { accessToken });
 
         res.status(200).json({
             data: { email: user.email, role: user.role },
@@ -75,25 +80,26 @@ exports.authenticate = async (req, res, next) => {
     }
 };
 
+//Current
 exports.login = async (req, res, next) => {
     try {
         const { walletAddress } = req.body;
-//Validate wallet Address
-        let user = await User.findById(walletAddress);
-        if (!user) {
-            user = new User({
-                _id : walletAddress                
+        //Validate wallet Address
+        let currentUser = await _user.findById(walletAddress);
+        if (!currentUser) {
+            currentUser = new _user({
+                _id: walletAddress
             });
-            user = await user.save();
-        }   
+            currentUser = await currentUser.save();
+        }
 
-        const accessToken = jwt.sign({ walletAddress }, process.env.JWT_SECRET, { expiresIn: "1d" })        
-        await User.findByIdAndUpdate(user._id, { accessToken });
+        const accessToken = jwt.sign({ walletAddress }, process.env.JWT_SECRET, { expiresIn: "1d" })
+        await _user.findByIdAndUpdate(currentUser._id, { accessToken });
 
         res.status(200).json({
-            data: user,
+            data: currentUser,
             accessToken,
-        });       
+        });
 
     } catch (error) {
         next(error);
@@ -102,14 +108,43 @@ exports.login = async (req, res, next) => {
 
 exports.updateProfile = async (req, res, next) => {
     try {
-        const { alias: userName, email, withdrawAccount } = req.body;
+        const { userName, email, withdrawAccount } = req.body;
         const { walletAddress } = req.params;
 
-        const user = User.findByIdAndUpdate({
-            walletAddress
-        }, { email, userName, withdrawAccount, role : "user" });
+        if (!userName || !email || !withdrawAccount || !walletAddress) {
+            res.status(400).json({
+                Status: false,
+                Message: "Invalid input"
+            });
+        }
 
-        res.status(200).send(user);
+        try {
+            const user = await _user.findByIdAndUpdate({
+                _id: walletAddress
+            }, { email, userName, withdrawAccount, role: "user" });
+
+            if (!user){
+                res.status(400).json({
+                    Status: false,
+                    Message: "Invalid wallet address"
+                });
+            }
+        }
+        catch (error) {
+            let message = error.message.toLowerCase();
+            if (message.includes("duplicate") && message.includes("username"))
+                throw new Error("UserName already exists");
+
+            if (message.includes("duplicate") && message.includes("email"))
+                throw new Error("Email already exists");
+
+            throw error;
+        }
+
+        res.status(200).json({
+            Status: true,
+            Message: "User details updated"
+        });
 
     } catch (error) {
         next(error)

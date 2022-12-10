@@ -5,7 +5,7 @@ const services = require("../controller/services/userService");
 
 const userRouter = Router();
 
-userRouter.post("/users", services.login);
-userRouter.put("/users/:walletAddress", auth.allowIfLoggedIn, services.updateProfile);
+userRouter.post("/login", services.login);
+userRouter.put("/:walletAddress", auth.allowIfLoggedIn, services.updateProfile);
 
 module.exports = userRouter;

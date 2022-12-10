@@ -77,7 +77,7 @@ class SetupServer {
         this.app.get("/", (req, res) => res.status(200).send({
             message: "Welcome to Role Based Sytem",
         }));
-        this.app.use("/v1.0/api", routes.userroutes);
+        this.app.use("/v2.0/api", routes.userroutes);
         this.app.all("*", (req, res) => res.send({ message: "route not found" }));
     }
     setupErrorHandlers() {

@@ -1,6 +1,6 @@
 import { Bytes } from "ethers/lib/utils";
 import { CampaignType, Network, Token, TransactionState, TransactionType } from "./enumerations";
-import userModel from "./userModel";
+import * as userModel from "./userModel";
 
 export interface CreateCampaignRequest {
     campaignId: number,

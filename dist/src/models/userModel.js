@@ -68,12 +68,12 @@ exports.userSchema = new mongoose_1.Schema({
     },
     //transactions: [transactionSchema],
     createdAt: {
-        type: Date,
+        type: String,
         default: Date.now().toLocaleString()
     },
     updatedAt: {
-        type: Date,
+        type: String,
         default: Date.now().toLocaleString()
     },
 });
-exports.default = mongoose_1.default.model("User", exports.userSchema);
+module.exports = mongoose_1.default.model("User", exports.userSchema);

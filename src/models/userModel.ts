@@ -43,13 +43,13 @@ export const userSchema = new Schema({
     },
 //transactions: [transactionSchema],
     createdAt: {
-        type: Date,
+        type: String,
         default: Date.now().toLocaleString()
     },
     updatedAt: {
-        type: Date,
+        type: String,
         default: Date.now().toLocaleString()
     },  
 });
 
-export default mongoose.model("User", userSchema);
+module.exports = mongoose.model("User", userSchema);
