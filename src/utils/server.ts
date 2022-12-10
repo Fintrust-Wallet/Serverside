@@ -110,7 +110,7 @@ export class SetupServer {
     }
 
     start() {
-        this.server = this.app.listen(this.port || 4001, () => {
+        this.server = this.app.listen(this.port || 4001, '0.0.0.0', () => {
             logger.info("Server listening on port: " + this.port);
             //handleEvents();
         });
