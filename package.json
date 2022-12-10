@@ -5,7 +5,8 @@
   "main": "index.ts",
   "scripts": {
     "test": "nodemon test",
-    "dev": "npx tsc && nodemon dist/index.js"
+    "dev": "npx tsc && nodemon dist/index.js",
+    "build" : "npx tsc && node index.ts"
   },
   "repository": {
     "type": "git",
