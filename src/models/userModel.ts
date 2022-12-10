@@ -8,10 +8,8 @@ export const userSchema = new Schema({
         unique: true
     },
     _id: {
-        type: String,
-        required: true,
-        trim: true,
-        unique: true
+        type: String,        
+        trim: true,        
     },
     withdrawAccount: {
         type: String,        

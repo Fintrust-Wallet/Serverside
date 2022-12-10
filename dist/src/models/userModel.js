@@ -34,9 +34,7 @@ exports.userSchema = new mongoose_1.Schema({
     },
     _id: {
         type: String,
-        required: true,
         trim: true,
-        unique: true
     },
     withdrawAccount: {
         type: String,
