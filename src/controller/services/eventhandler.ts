@@ -1,6 +1,9 @@
-import { CreateCampaignRequest } from "../../models/interfaces";
+import { TransactionType } from "../../models/enumerations";
+import { CreateCampaignRequest, CreateTransactionRequest } from "../../models/interfaces";
+import { createDate } from "../../utils/helpers";
 import { getFiles } from "../../utils/web3storage";
 import { createCampaign } from "./campaignService";
+import { createTransaction } from "./TransactionService";
 
 const ethers = require("ethers");
 const abi = require("../../contract/ABI/fintrust.json");
@@ -30,11 +33,32 @@ export async function handleEvents () {
             title : campaignInfo.campaignTitle,
             description : campaignInfo.campaignDescription,
             media: campaignInfo.images            
-        }
-
-        console.log(request, "REQUEST")
+        };       
 
         await createCampaign(request);   
     })
 
+    contract.on("Donated", async (campaignId, sender, timestamp, amount, event) => {
+        const request : CreateTransactionRequest= {
+            campaignId,
+            sender,
+            type: TransactionType.donate,
+            amount,
+            timeStamp: createDate(timestamp)
+        } 
+
+        await createTransaction(request);
+    });
+
+    contract.on("WithDrawn", async (campaignId, sender, timestamp, amount, event) => {
+        const request: CreateTransactionRequest = {
+            campaignId,
+            sender,
+            type: TransactionType.withdraw,
+            amount,
+            timeStamp: createDate(timestamp)
+        }
+
+        await createTransaction(request);
+    });
 }

@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+import { transactionSchema } from "./TransactionModel";
 
 export const userSchema = new Schema({
     email: {
@@ -40,6 +41,7 @@ export const userSchema = new Schema({
     totalCampaignsCreated: {
         type: Number
     },
+    transactions: [transactionSchema],
     createdAt: {
         type: Date,
         default: Date.now().toLocaleString()

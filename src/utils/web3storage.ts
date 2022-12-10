@@ -42,8 +42,8 @@ export const getFiles = async (cid) => {
     let campaignDetails = {};
 
     let finalresult: GetCampaignInfoResponse = {
-      campaignAmount : 0,
-      campaignDescription : "",
+      campaignAmount: 0,
+      campaignDescription: "",
       campaignTitle: "",
       images: []
     };
@@ -63,11 +63,9 @@ export const getFiles = async (cid) => {
 
     campaignDetailKeys.forEach((key, index) => {
       finalresult[key] = campaignDetailvalues[index];
-    });   
+    });
     return finalresult;
   }
 
   return null;
 };
-
-getFiles("bafybeigj2b2wm2lqktihkkhxosnyutpxbsnvvb22uvjvdlu2bjbobr6cnm")

@@ -1,7 +1,7 @@
-const logger = require("./src/utils.ts/logger");
+const logger = require("./src/utils/logger");
 const { env } = require("./src/config");
 
-const SetupServer = require("./src/utils.ts/server");
+const SetupServer = require("./src/utils/server");
 
 const { PORT } = env;
 

@@ -1,5 +1,5 @@
 const joi = require("joi");
-const logger = require("../utils.ts/logger");
+const logger = require("../utils/logger");
 
 require("dotenv").config();
 

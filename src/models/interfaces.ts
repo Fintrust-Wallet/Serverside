@@ -1,12 +1,13 @@
 import { Bytes } from "ethers/lib/utils";
-import { CampaignType } from "./enumerations";
+import { CampaignType, Network, Token, TransactionState, TransactionType } from "./enumerations";
+import userModel from "./userModel";
 
 export interface CreateCampaignRequest {
-    campaignId : Bytes,
-    creator : string, 
-    url: string, 
-    timeStamp : Date, 
-    campaignType : CampaignType, 
+    campaignId: number,
+    creator: string,
+    url: string,
+    timeStamp: Date,
+    campaignType: CampaignType,
     amount: number,
     signatories: string[],
     title: string,
@@ -15,9 +16,37 @@ export interface CreateCampaignRequest {
 }
 
 export interface GetCampaignInfoResponse {
-    campaignTitle : string,
+    campaignTitle: string,
     campaignDescription: string,
     campaignAmount: number,
     images: string[]
 }
 
+export interface CreateTransactionRequest {
+    campaignId: number,
+    sender: string,
+    type: TransactionType,
+    amount: number,
+    timeStamp: Date
+}
+
+export interface CreateWithdrawRequestRequest {
+    campaignId: number,
+    sender: string
+}
+
+export class Signer {
+    userId: string
+    email: string;
+    hasVoted: boolean;
+    confirmed: boolean;
+
+    /**
+     *
+     */
+    constructor(_userId) {
+        this.userId = _userId;        
+        this.hasVoted = false;
+        this.confirmed = false;
+    }
+}

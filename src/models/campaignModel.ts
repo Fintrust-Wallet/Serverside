@@ -1,7 +1,6 @@
-import { Schema, model } from "mongoose";
+import mongoose, { Schema, model } from "mongoose";
 import { CampaignState, CampaignType } from "./enumerations";
 import { transactionSchema } from "./TransactionModel";
-import { userSchema } from "./userModel";
 
 export const campaignSchema = new Schema({
     _id: {
@@ -23,10 +22,11 @@ export const campaignSchema = new Schema({
     },
     media: {
         type: [String],
-        required: false       
+        required: false
     },
-    creator: {
-        type: userSchema,
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
         required: true
     },
     uri: {
@@ -50,7 +50,7 @@ export const campaignSchema = new Schema({
         type: CampaignState,
         default: CampaignState.created
     },
-    type: {
+    campaignType: {
         type: CampaignType,
         required: true
     },
@@ -60,7 +60,8 @@ export const campaignSchema = new Schema({
         default: Date.now().toLocaleString()
     },
     updatedAt: {
-        type: Date        
+        type: Date,
+        default: Date.now().toLocaleString()
     },
 });
 

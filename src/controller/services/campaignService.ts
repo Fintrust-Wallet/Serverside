@@ -8,7 +8,11 @@ export const createCampaign = async (request: CreateCampaignRequest, signatories
         uri: request.url,
         amount: request.amount,
         type: request.campaignType,
-        signatories: signatories
+        signatories: signatories,
+        description: request.description,
+        title: request.title,
+        media: request.media,
+        campaignType: request.campaignType
     });
 
     return await campaign.save();
@@ -27,7 +31,7 @@ export const getACampaign = async (req, res, next) => {
             return res.status(404).send("Campaign not found");
 
         return res.status(200).send(campaign);
-        
+
     } catch (err) {
         next(err)
     }

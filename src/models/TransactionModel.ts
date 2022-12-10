@@ -4,19 +4,19 @@ import { Network, Token, TransactionState, TransactionType } from "./enumeration
 import { userSchema } from "./userModel";
 
 export const transactionSchema = new Schema({    
-    user: {
-        type: userSchema,
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
         required: true,
-        trim: true
+        trim: true //add user emal or wallet address
     },
     campaign: {
-        type: campaignSchema,
-        required: true,
-        trim: true
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"Campaign",
+        required: true,       
     },
     createdAt: {
-        type: Date,
-        default: Date.now().toLocaleString()
+        type: Date,        
     },
     updatedAt: {
         type: Date,
@@ -24,7 +24,7 @@ export const transactionSchema = new Schema({
     },
     type: {
         type: TransactionType,
-        required: true        
+        default: TransactionType.donate        
     },
     amount: Number,
     state: {
