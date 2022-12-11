@@ -1,2 +1,3 @@
-const userroutes = require("./userRoutes.js");
-module.exports = { userroutes };
+const userroutes = require("./userRoutes");
+const campaignroutes = require("./campaignRoutes");
+module.exports = { userroutes, campaignroutes };

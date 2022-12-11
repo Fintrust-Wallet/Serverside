@@ -90,7 +90,7 @@ exports.login = (req, res, next) => __awaiter(this, void 0, void 0, function* ()
         yield _user.findByIdAndUpdate(currentUser._id, { accessToken });
         res.status(200).json({
             data: currentUser,
-            accessToken,
+            newToken: accessToken,
         });
     }
     catch (error) {

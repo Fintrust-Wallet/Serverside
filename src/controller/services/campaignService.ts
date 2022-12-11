@@ -1,9 +1,7 @@
-const campaignModel  = require("../../models/campaignModel");
+const campaignModel = require("../../models/campaignModel");
 import { CreateCampaignRequest } from "../../models/interfaces";
 
-export const createCampaign = async (request: CreateCampaignRequest, signatories: string[] = []) => {
-
-    console.log(request, "REQUEST");
+export const createCampaign = async (request: CreateCampaignRequest, signatories: string[] = []) => {   
 
     const campaign = new campaignModel({
         _id: request.campaignId,
@@ -17,11 +15,9 @@ export const createCampaign = async (request: CreateCampaignRequest, signatories
         media: request.media,
         campaignType: request.campaignType
     });
-    console.log("Campaign about to be Saved")
-    let result =  await campaign.save();
-    console.log("Campaign Saved")
-console.log(result);
-    }
+
+    return await campaign.save();
+}
 
 export const getACampaign = async (req, res, next) => {
     try {
@@ -46,17 +42,23 @@ export const getACampaign = async (req, res, next) => {
 export const getCampaigns = async (req, res, next) => {
     try {
         const { pageNumber, pageSize, searchQuery } = req.query;
-        const campaigns = await campaignModel.find({
-            $or: [
-                { title: /.*${searchQuery}.*/i },
-                { description: /.*${searchQuery}.*/i }
-            ]
-        })
-            .sort({ _id: 1 })
-            .skip((pageNumber - 1) * pageSize)
-            .limit(pageSize);
 
-        return res.status(200).send(campaigns);
+        if (searchQuery){
+            //Find where search query is in title or description
+            const campaigns = await campaignModel.find({
+                $or: [
+                    { title: /.*${searchQuery}.*/i },
+                    { description: /.*${searchQuery}.*/i }
+                ]
+            })
+                .sort({ _id: 1 })
+                .skip((pageNumber - 1) * pageSize)
+                .limit(pageSize);
+
+            return res.status(200).send(campaigns);
+        }
+
+        return res.status(200).send(await campaignModel.find());       
 
     } catch (err) {
         next(err)
@@ -67,19 +69,27 @@ export const getMySignatoryCampaigns = async (req, res, next) => {
     try {
         const { pageNumber, pageSize, searchQuery } = req.query;
         const { address } = req.params;
+        const currentUser = req.user;       
 
-        const campaigns = await campaignModel.find({
-            signatories: address,
-            $or: [
-                { title: /.*${searchQuery}.*/i },
-                { description: /.*${searchQuery}.*/i }
-            ]
-        })
-            .sort({ _id: 1 })
-            .skip((pageNumber - 1) * pageSize)
-            .limit(pageSize);
+        if(searchQuery){
+            const campaigns = await campaignModel.find({
+                signatories: currentUser._id,
+                $or: [
+                    { title: /.*${searchQuery}.*/i },
+                    { description: /.*${searchQuery}.*/i }
+                ]
+            })
+                .sort({ _id: 1 })
+                .skip((pageNumber - 1) * pageSize)
+                .limit(pageSize);
 
-        return res.status(200).send(campaigns);
+            return res.status(200).send(campaigns);
+        }
+
+        return res.status(200).send(await campaignModel.find({
+            signatories: currentUser._id
+        }));
+       
 
     } catch (error) {
         next(error)
@@ -92,19 +102,25 @@ export const getMyCreatedCampaigns = async (req, res, next) => {
     try {
         const { pageNumber, pageSize, searchQuery } = req.query;
         const { address } = req.params;
+        const currentUser = req.user;             
 
-        const campaigns = await campaignModel.find({
-            creator: address,
-            $or: [
-                { title: /.*${searchQuery}.*/i },
-                { description: /.*${searchQuery}.*/i }
-            ]
-        })
-            .sort({ _id: 1 })
-            .skip((pageNumber - 1) * pageSize)
-            .limit(pageSize);
+        if(searchQuery){
+            const campaigns = await campaignModel.find({
+                userId: currentUser._id,
+                $or: [
+                    { title: /.*${searchQuery}.*/i },
+                    { description: /.*${searchQuery}.*/i }
+                ]
+            })
+                .sort({ _id: 1 })
+                .skip((pageNumber - 1) * pageSize)
+                .limit(pageSize);
 
-        return res.status(200).send(campaigns);
+            return res.status(200).send(campaigns);
+        }
+
+        return res.status(200).send(await campaignModel.find({
+            userId: address}));        
 
     } catch (error) {
         next(error)

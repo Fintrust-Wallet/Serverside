@@ -12,7 +12,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getMyCreatedCampaigns = exports.getMySignatoryCampaigns = exports.getCampaigns = exports.getACampaign = exports.createCampaign = void 0;
 const campaignModel = require("../../models/campaignModel");
 const createCampaign = (request, signatories = []) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(request, "REQUEST");
     const campaign = new campaignModel({
         _id: request.campaignId,
         userId: request.creator,
@@ -25,10 +24,7 @@ const createCampaign = (request, signatories = []) => __awaiter(void 0, void 0, 
         media: request.media,
         campaignType: request.campaignType
     });
-    console.log("Campaign about to be Saved");
-    let result = yield campaign.save();
-    console.log("Campaign Saved");
-    console.log(result);
+    return yield campaign.save();
 });
 exports.createCampaign = createCampaign;
 const getACampaign = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -49,16 +45,20 @@ exports.getACampaign = getACampaign;
 const getCampaigns = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { pageNumber, pageSize, searchQuery } = req.query;
-        const campaigns = yield campaignModel.find({
-            $or: [
-                { title: /.*${searchQuery}.*/i },
-                { description: /.*${searchQuery}.*/i }
-            ]
-        })
-            .sort({ _id: 1 })
-            .skip((pageNumber - 1) * pageSize)
-            .limit(pageSize);
-        return res.status(200).send(campaigns);
+        if (searchQuery) {
+            //Find where search query is in title or description
+            const campaigns = yield campaignModel.find({
+                $or: [
+                    { title: /.*${searchQuery}.*/i },
+                    { description: /.*${searchQuery}.*/i }
+                ]
+            })
+                .sort({ _id: 1 })
+                .skip((pageNumber - 1) * pageSize)
+                .limit(pageSize);
+            return res.status(200).send(campaigns);
+        }
+        return res.status(200).send(yield campaignModel.find());
     }
     catch (err) {
         next(err);
@@ -69,17 +69,23 @@ const getMySignatoryCampaigns = (req, res, next) => __awaiter(void 0, void 0, vo
     try {
         const { pageNumber, pageSize, searchQuery } = req.query;
         const { address } = req.params;
-        const campaigns = yield campaignModel.find({
-            signatories: address,
-            $or: [
-                { title: /.*${searchQuery}.*/i },
-                { description: /.*${searchQuery}.*/i }
-            ]
-        })
-            .sort({ _id: 1 })
-            .skip((pageNumber - 1) * pageSize)
-            .limit(pageSize);
-        return res.status(200).send(campaigns);
+        const currentUser = req.user;
+        if (searchQuery) {
+            const campaigns = yield campaignModel.find({
+                signatories: currentUser._id,
+                $or: [
+                    { title: /.*${searchQuery}.*/i },
+                    { description: /.*${searchQuery}.*/i }
+                ]
+            })
+                .sort({ _id: 1 })
+                .skip((pageNumber - 1) * pageSize)
+                .limit(pageSize);
+            return res.status(200).send(campaigns);
+        }
+        return res.status(200).send(yield campaignModel.find({
+            signatories: currentUser._id
+        }));
     }
     catch (error) {
         next(error);
@@ -91,17 +97,23 @@ const getMyCreatedCampaigns = (req, res, next) => __awaiter(void 0, void 0, void
     try {
         const { pageNumber, pageSize, searchQuery } = req.query;
         const { address } = req.params;
-        const campaigns = yield campaignModel.find({
-            creator: address,
-            $or: [
-                { title: /.*${searchQuery}.*/i },
-                { description: /.*${searchQuery}.*/i }
-            ]
-        })
-            .sort({ _id: 1 })
-            .skip((pageNumber - 1) * pageSize)
-            .limit(pageSize);
-        return res.status(200).send(campaigns);
+        const currentUser = req.user;
+        if (searchQuery) {
+            const campaigns = yield campaignModel.find({
+                userId: currentUser._id,
+                $or: [
+                    { title: /.*${searchQuery}.*/i },
+                    { description: /.*${searchQuery}.*/i }
+                ]
+            })
+                .sort({ _id: 1 })
+                .skip((pageNumber - 1) * pageSize)
+                .limit(pageSize);
+            return res.status(200).send(campaigns);
+        }
+        return res.status(200).send(yield campaignModel.find({
+            userId: address
+        }));
     }
     catch (error) {
         next(error);

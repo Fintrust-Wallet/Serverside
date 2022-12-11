@@ -38,8 +38,6 @@ const retrieveFiles = async (cid) => {
 export const getFiles = async (cid) => {  
   let files = await retrieveFiles(cid);
 
-  console.log(files, "FILES");
-
   if (files.length > 0) {
     let campaignDetails = {};
 

@@ -47,3 +47,5 @@ If the data is mostly read and does not change quickly, we should probably embed
 
 //To Do 
 - Declare a wallet type and Add Validation for it
+- When a person selects public campaign from the FE, we collect the signatories and store also with the files on IPFS
+after the contract event has triggered the server to create a campaign, we will check if the campaign is public. Then we will collect the signatories from web3storage and store it in our DB
