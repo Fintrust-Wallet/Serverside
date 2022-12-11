@@ -4,10 +4,8 @@ import { CampaignState, CampaignType } from "./enumerations";
 
 export const campaignSchema = new Schema({
     _id: {
-        type: String,
-        required: true,
-        trim: true,
-        unique: true
+        type: String,       
+        trim: true        
     },
     title: {
         type: String,
@@ -25,7 +23,8 @@ export const campaignSchema = new Schema({
         required: false
     },
     userId: {
-        type: mongoose.Schema.Types.ObjectId,
+       // type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: "User",
         required: true
     },
@@ -47,22 +46,24 @@ export const campaignSchema = new Schema({
         trim: true
     },
     state: {
-        type: CampaignState,
-        default: CampaignState.created
+        type: Number,
+        default: CampaignState.created,
+        enum: CampaignState
     },
     campaignType: {
-        type: CampaignType,
-        required: true
+        type: Number,
+        required: true,
+        enum: CampaignType
     },
    // transactions: [transactionSchema],
     createdAt: {
-        type: Date,
+        type: String,
         default: Date.now().toLocaleString()
     },
     updatedAt: {
-        type: Date,
+        type: String,
         default: Date.now().toLocaleString()
     },
 });
 
-export default model("Campaign", campaignSchema);
+module.exports = model("Campaign", campaignSchema);

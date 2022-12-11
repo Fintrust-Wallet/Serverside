@@ -41,6 +41,7 @@ const retrieveFiles = (cid) => __awaiter(void 0, void 0, void 0, function* () {
 //Work on this
 const getFiles = (cid) => __awaiter(void 0, void 0, void 0, function* () {
     let files = yield retrieveFiles(cid);
+    console.log(files, "FILES");
     if (files.length > 0) {
         let campaignDetails = {};
         let finalresult = {

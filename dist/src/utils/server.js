@@ -1,5 +1,4 @@
 "use strict";
-//import { handleEvents } from "../controller/services/eventhandler";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -11,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SetupServer = void 0;
+const eventhandler_1 = require("../controller/services/eventhandler");
 const cors = require("cors");
 const express = require("express");
 const expressPino = require("express-pino-logger");
@@ -108,10 +108,10 @@ class SetupServer {
         });
     }
     start() {
-        this.server = this.app.listen(this.port || 4001, '0.0.0.0', () => {
+        this.server = this.app.listen(this.port || 4001, '0.0.0.0', () => __awaiter(this, void 0, void 0, function* () {
             logger.info("Server listening on port: " + this.port);
-            //handleEvents();
-        });
+            yield (0, eventhandler_1.handleEvents)();
+        }));
     }
 }
 exports.SetupServer = SetupServer;

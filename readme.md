@@ -1,4 +1,7 @@
 # Fintrust API
+Contract : 0x2Df9063DaC57aC33544113eE3Ce1a2FA4D36fCB4
+
+Token: 0x1B33d4Ab4FaA951cb0d759be6284e5A74e37A1CD
 
 ## Endpoints
 ### Authentication

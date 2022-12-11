@@ -3,8 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Network = exports.Token = exports.TransactionState = exports.TransactionType = exports.CampaignState = exports.CampaignType = void 0;
 var CampaignType;
 (function (CampaignType) {
-    CampaignType["individual"] = "Indivividual";
-    CampaignType["public"] = "public";
+    CampaignType[CampaignType["individual"] = 1] = "individual";
+    CampaignType[CampaignType["public"] = 2] = "public";
 })(CampaignType = exports.CampaignType || (exports.CampaignType = {}));
 var CampaignState;
 (function (CampaignState) {

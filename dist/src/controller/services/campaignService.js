@@ -8,16 +8,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getMyCreatedCampaigns = exports.getMySignatoryCampaigns = exports.getCampaigns = exports.getACampaign = exports.createCampaign = void 0;
-const campaignModel_1 = __importDefault(require("../../models/campaignModel"));
+const campaignModel = require("../../models/campaignModel");
 const createCampaign = (request, signatories = []) => __awaiter(void 0, void 0, void 0, function* () {
-    const campaign = new campaignModel_1.default({
+    console.log(request, "REQUEST");
+    const campaign = new campaignModel({
         _id: request.campaignId,
-        creator: request.creator,
+        userId: request.creator,
         uri: request.url,
         amount: request.amount,
         type: request.campaignType,
@@ -27,7 +25,10 @@ const createCampaign = (request, signatories = []) => __awaiter(void 0, void 0, 
         media: request.media,
         campaignType: request.campaignType
     });
-    return yield campaign.save();
+    console.log("Campaign about to be Saved");
+    let result = yield campaign.save();
+    console.log("Campaign Saved");
+    console.log(result);
 });
 exports.createCampaign = createCampaign;
 const getACampaign = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -35,7 +36,7 @@ const getACampaign = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         const { id } = req.params;
         if (!id)
             return res.status(400).send("Invalid Campaign Id");
-        const campaign = yield campaignModel_1.default.findById(id);
+        const campaign = yield campaignModel.findById(id);
         if (!campaign)
             return res.status(404).send("Campaign not found");
         return res.status(200).send(campaign);
@@ -48,7 +49,7 @@ exports.getACampaign = getACampaign;
 const getCampaigns = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { pageNumber, pageSize, searchQuery } = req.query;
-        const campaigns = yield campaignModel_1.default.find({
+        const campaigns = yield campaignModel.find({
             $or: [
                 { title: /.*${searchQuery}.*/i },
                 { description: /.*${searchQuery}.*/i }
@@ -68,7 +69,7 @@ const getMySignatoryCampaigns = (req, res, next) => __awaiter(void 0, void 0, vo
     try {
         const { pageNumber, pageSize, searchQuery } = req.query;
         const { address } = req.params;
-        const campaigns = yield campaignModel_1.default.find({
+        const campaigns = yield campaignModel.find({
             signatories: address,
             $or: [
                 { title: /.*${searchQuery}.*/i },
@@ -90,7 +91,7 @@ const getMyCreatedCampaigns = (req, res, next) => __awaiter(void 0, void 0, void
     try {
         const { pageNumber, pageSize, searchQuery } = req.query;
         const { address } = req.params;
-        const campaigns = yield campaignModel_1.default.find({
+        const campaigns = yield campaignModel.find({
             creator: address,
             $or: [
                 { title: /.*${searchQuery}.*/i },

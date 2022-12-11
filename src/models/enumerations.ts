@@ -1,6 +1,6 @@
 export enum CampaignType {
-    individual = "Indivividual",
-    public = "public"
+    individual = 1,
+    public = 2
 }
 
 export enum CampaignState {

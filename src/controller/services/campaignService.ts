@@ -1,10 +1,13 @@
-import campaignModel from "../../models/campaignModel";
+const campaignModel  = require("../../models/campaignModel");
 import { CreateCampaignRequest } from "../../models/interfaces";
 
 export const createCampaign = async (request: CreateCampaignRequest, signatories: string[] = []) => {
+
+    console.log(request, "REQUEST");
+
     const campaign = new campaignModel({
         _id: request.campaignId,
-        creator: request.creator,
+        userId: request.creator,
         uri: request.url,
         amount: request.amount,
         type: request.campaignType,
@@ -14,9 +17,11 @@ export const createCampaign = async (request: CreateCampaignRequest, signatories
         media: request.media,
         campaignType: request.campaignType
     });
-
-    return await campaign.save();
-}
+    console.log("Campaign about to be Saved")
+    let result =  await campaign.save();
+    console.log("Campaign Saved")
+console.log(result);
+    }
 
 export const getACampaign = async (req, res, next) => {
     try {
