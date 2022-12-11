@@ -53,16 +53,17 @@ export class SetupServer {
             })
         );
         this.app.use(async (req, res, next) => {
-            if (req.headers["x-access-token"]) {
+            if (req.headers["x-access-token"]) {                
                 const accessToken = req.headers["x-access-token"];
                 const { walletAddress, exp } = jwt.verify(accessToken, process.env.JWT_SECRET);
+                
                 // Check if token has expired
-                if (exp < Date.now().valueOf() / 1000) {
+                if (exp < Date.now().valueOf() / 1000) {                    
                     return res.status(401).json({
                         error: "JWT token has expired, please login to obtain a new one",
                     });
                 }
-                res.locals.loggedInUser = await User.findOne({ walletAddress });;
+                res.locals.loggedInUser = await User.findOne({ _id : walletAddress });
                 next();
             } else {
                 next();
@@ -74,10 +75,12 @@ export class SetupServer {
     setupControllers() {
         this.app.get("/", (req, res) =>
             res.status(200).send({
-                message: "Welcome to Role Based Sytem",
+                message: "Welcome to Fintrust API",
             })
-        );
+        );        
         this.app.use("/v2.0/api", routes.userroutes);
+        this.app.use("/v2.0/api", routes.campaignroutes.default); //I exported this as an es6 module
+
         this.app.all("*", (req, res) => res.send({ message: "route not found" }));
     }
 
