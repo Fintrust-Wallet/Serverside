@@ -86,6 +86,7 @@ exports.login = async (req, res, next) => {
         const { walletAddress } = req.body;
         //Validate wallet Address
         let currentUser = await _user.findById(walletAddress);
+       
         if (!currentUser) {
             currentUser = new _user({
                 _id: walletAddress
@@ -98,7 +99,7 @@ exports.login = async (req, res, next) => {
 
         res.status(200).json({
             data: currentUser,
-            accessToken,
+            newToken : accessToken,
         });
 
     } catch (error) {
