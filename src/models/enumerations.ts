@@ -8,14 +8,14 @@ export enum CampaignState {
 }
 
 export enum TransactionType {
-    withdraw,
-    donate
+    withdraw = 1,
+    donate = 2
 }
 
 export enum TransactionState {
-    pending,
-    cancelled,
-    completed
+    pending = 1,
+    cancelled = 2,
+    completed = 3
 }
 
 export enum Token {

@@ -3,7 +3,7 @@ import { CampaignType, Network, Token, TransactionState, TransactionType } from 
 import * as userModel from "./userModel";
 
 export interface CreateCampaignRequest {
-    campaignId: number,
+    campaignId: string,
     creator: string,
     url: string,
     timeStamp: Date,
@@ -23,7 +23,7 @@ export interface GetCampaignInfoResponse {
 }
 
 export interface CreateTransactionRequest {
-    campaignId: number,
+    campaignId: string,
     sender: string,
     type: TransactionType,
     amount: number,
@@ -31,7 +31,7 @@ export interface CreateTransactionRequest {
 }
 
 export interface CreateWithdrawRequestRequest {
-    campaignId: number,
+    campaignId: string,
     sender: string
 }
 
