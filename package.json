@@ -41,5 +41,8 @@
     "mongoose-type-email": "^1.1.2",
     "pino": "^8.7.0",
     "web3.storage": "^4.4.0"
+  },
+  "engines": {
+    "node": "18.x"
   }
 }
