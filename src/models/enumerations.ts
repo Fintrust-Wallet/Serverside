@@ -4,7 +4,8 @@ export enum CampaignType {
 }
 
 export enum CampaignState {
-    created
+    created,
+    withdrawRequested
 }
 
 export enum TransactionType {
