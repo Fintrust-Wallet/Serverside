@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-//import { transactionSchema } from "./TransactionModel";
+import { transactionSchema } from "./TransactionModel";
 
 export const userSchema = new Schema({
     email: {
@@ -39,7 +39,7 @@ export const userSchema = new Schema({
     totalCampaignsCreated: {
         type: Number
     },
-//transactions: [transactionSchema],
+    transactions: [transactionSchema],
     createdAt: {
         type: String,
         default: Date.now().toLocaleString()
@@ -50,4 +50,4 @@ export const userSchema = new Schema({
     },  
 });
 
-module.exports = mongoose.model("User", userSchema);
+export default mongoose.model("User", userSchema);

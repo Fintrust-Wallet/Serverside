@@ -1,6 +1,6 @@
 import mongoose, { Schema, model } from "mongoose";
 import { CampaignState, CampaignType } from "./enumerations";
-//import { transactionSchema } from "./TransactionModel";
+import { transactionSchema } from "./TransactionModel";
 
 export const campaignSchema = new Schema({
     _id: {
@@ -55,7 +55,7 @@ export const campaignSchema = new Schema({
         required: true,
         enum: CampaignType
     },
-   // transactions: [transactionSchema],
+   transactions: [transactionSchema],
     createdAt: {
         type: String,
         default: Date.now().toLocaleString()
@@ -66,4 +66,4 @@ export const campaignSchema = new Schema({
     },
 });
 
-module.exports = model("Campaign", campaignSchema);
+export default model("Campaign", campaignSchema);
