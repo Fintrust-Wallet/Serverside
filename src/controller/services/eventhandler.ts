@@ -4,18 +4,20 @@ import { createDate } from "../../utils/helpers";
 import { getFiles } from "../../utils/web3storage";
 import { createCampaign } from "./campaignService";
 import mongoose from "mongoose";
-//import { createTransaction } from "./TransactionService";
+import { createTransaction } from "./TransactionService";
+import campaignModel from "../../models/campaignModel";
 
 const ethers = require("ethers");
 const abi = require("../../contract/ABI/fintrust");
 require("dotenv").config();
 
+const fintrustAddress = "0x2Df9063DaC57aC33544113eE3Ce1a2FA4D36fCB4";
+const provider = new ethers.providers.WebSocketProvider("wss://polygon-mumbai.g.alchemy.com/v2/R2WUD0JVyC7HXqRqPyQ1TeECHNm6JX7K");
+
+const contract = new ethers.Contract(fintrustAddress, abi, provider);
+
 export async function handleEvents () {
 
-    const fintrustAddress = "0x2Df9063DaC57aC33544113eE3Ce1a2FA4D36fCB4";
-    const provider = new ethers.providers.WebSocketProvider("wss://polygon-mumbai.g.alchemy.com/v2/R2WUD0JVyC7HXqRqPyQ1TeECHNm6JX7K");
-
-    const contract = new ethers.Contract(fintrustAddress, abi, provider);    
     contract.on("CampaignCreated", async (campaignId, creator, url, timeStamp, campaignType, amount, event) => {
         console.log("event fired");
         campaignId = campaignId.toString();
@@ -46,17 +48,24 @@ export async function handleEvents () {
         await createCampaign(request);   
     })
 
-    // contract.on("Donated", async (campaignId, sender, timestamp, amount, event) => {
-    //     const request : CreateTransactionRequest= {
-    //         campaignId,
-    //         sender,
-    //         type: TransactionType.donate,
-    //         amount,
-    //         timeStamp: createDate(timestamp)
-    //     } 
+    contract.on("Donated", async (campaignId, sender, timestamp, amount, event) => {
+        console.log("Donation called");       
 
-    //     await createTransaction(request);
-    // });
+        campaignId = campaignId.toString();
+        timestamp = timestamp.toString();
+        amount = amount.toString();
+        sender = sender.toString();
+
+        const request : CreateTransactionRequest= {
+            campaignId,
+            sender,
+            type: TransactionType.donate,
+            amount,
+            timeStamp: createDate(timestamp)
+        } 
+
+        await createTransaction(request);
+    });
 
     // contract.on("WithDrawn", async (campaignId, sender, timestamp, amount, event) => {
     //     const request: CreateTransactionRequest = {
@@ -70,3 +79,21 @@ export async function handleEvents () {
     //     await createTransaction(request);
     // });
 }
+
+// async function syncCampaigns () {
+//     let campaigns  = await contract.getAllCampaigns();
+
+//     campaigns.forEach(async (x) => {
+//         let _id = x.campaignId.toString()
+//         let campaign = await campaignModel.findById({ _id });
+
+//         if (campaign){
+//             console.log(true);
+//         }
+//         else{
+//             console.log(false)
+//         }
+//     })
+// }
+
+// syncCampaigns();

@@ -24,7 +24,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.withdrawRequestSchema = void 0;
-const joi_1 = require("joi");
 const mongoose_1 = __importStar(require("mongoose"));
 const enumerations_1 = require("./enumerations");
 const interfaces_1 = require("./interfaces");
@@ -35,8 +34,7 @@ exports.withdrawRequestSchema = new mongoose_1.Schema({
         required: true,
     },
     confirmations: {
-        type: joi_1.number,
-        default: 0
+        type: Number,
     },
     status: {
         type: enumerations_1.TransactionState,

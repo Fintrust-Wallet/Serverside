@@ -10,7 +10,7 @@ campaignRoutes.get("/campaigns", _auth.allowIfLoggedIn, _services.getCampaigns);
 // - Get a campaign
 campaignRoutes.get("/campaigns/:id", _auth.allowIfLoggedIn, _services.getACampaign);
 // - Get My Created Campaigns
-campaignRoutes.get("/campaigns/user/created", _auth.allowIfLoggedIn, _services.getMyCreatedCampaigns);
+campaignRoutes.get("/campaigns/user/created", _auth.allowIfLoggedIn, _auth.grantAccess("readAny", "profile"), _services.getMyCreatedCampaigns);
 // - Get All Campaigns where I am a signatory
 campaignRoutes.get("/campaigns/user/signatory", _auth.allowIfLoggedIn, _auth.grantAccess("readAny", "profile"), _services.getMySignatoryCampaigns);
 exports.default = campaignRoutes;

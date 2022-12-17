@@ -25,7 +25,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userSchema = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
-//import { transactionSchema } from "./TransactionModel";
+const TransactionModel_1 = require("./TransactionModel");
 exports.userSchema = new mongoose_1.Schema({
     email: {
         type: String,
@@ -64,7 +64,7 @@ exports.userSchema = new mongoose_1.Schema({
     totalCampaignsCreated: {
         type: Number
     },
-    //transactions: [transactionSchema],
+    transactions: [TransactionModel_1.transactionSchema],
     createdAt: {
         type: String,
         default: Date.now().toLocaleString()
@@ -74,4 +74,4 @@ exports.userSchema = new mongoose_1.Schema({
         default: Date.now().toLocaleString()
     },
 });
-module.exports = mongoose_1.default.model("User", exports.userSchema);
+exports.default = mongoose_1.default.model("User", exports.userSchema);

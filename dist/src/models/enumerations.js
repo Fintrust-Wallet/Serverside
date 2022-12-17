@@ -12,14 +12,14 @@ var CampaignState;
 })(CampaignState = exports.CampaignState || (exports.CampaignState = {}));
 var TransactionType;
 (function (TransactionType) {
-    TransactionType[TransactionType["withdraw"] = 0] = "withdraw";
-    TransactionType[TransactionType["donate"] = 1] = "donate";
+    TransactionType[TransactionType["withdraw"] = 1] = "withdraw";
+    TransactionType[TransactionType["donate"] = 2] = "donate";
 })(TransactionType = exports.TransactionType || (exports.TransactionType = {}));
 var TransactionState;
 (function (TransactionState) {
-    TransactionState[TransactionState["pending"] = 0] = "pending";
-    TransactionState[TransactionState["cancelled"] = 1] = "cancelled";
-    TransactionState[TransactionState["completed"] = 2] = "completed";
+    TransactionState[TransactionState["pending"] = 1] = "pending";
+    TransactionState[TransactionState["cancelled"] = 2] = "cancelled";
+    TransactionState[TransactionState["completed"] = 3] = "completed";
 })(TransactionState = exports.TransactionState || (exports.TransactionState = {}));
 var Token;
 (function (Token) {

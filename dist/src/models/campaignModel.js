@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.campaignSchema = void 0;
 const mongoose_1 = require("mongoose");
 const enumerations_1 = require("./enumerations");
-//import { transactionSchema } from "./TransactionModel";
+const TransactionModel_1 = require("./TransactionModel");
 exports.campaignSchema = new mongoose_1.Schema({
     _id: {
         type: String,
@@ -57,7 +57,7 @@ exports.campaignSchema = new mongoose_1.Schema({
         required: true,
         enum: enumerations_1.CampaignType
     },
-    // transactions: [transactionSchema],
+    transactions: [TransactionModel_1.transactionSchema],
     createdAt: {
         type: String,
         default: Date.now().toLocaleString()
@@ -67,4 +67,4 @@ exports.campaignSchema = new mongoose_1.Schema({
         default: Date.now().toLocaleString()
     },
 });
-module.exports = (0, mongoose_1.model)("Campaign", exports.campaignSchema);
+exports.default = (0, mongoose_1.model)("Campaign", exports.campaignSchema);

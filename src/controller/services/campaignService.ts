@@ -1,8 +1,7 @@
 const campaignModel = require("../../models/campaignModel");
 import { CreateCampaignRequest } from "../../models/interfaces";
 
-export const createCampaign = async (request: CreateCampaignRequest, signatories: string[] = []) => {   
-
+export const createCampaign = async (request: CreateCampaignRequest, signatories: string[] = []) => { 
     const campaign = new campaignModel({
         _id: request.campaignId,
         userId: request.creator,

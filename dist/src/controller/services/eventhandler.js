@@ -10,17 +10,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleEvents = void 0;
+const enumerations_1 = require("../../models/enumerations");
+const helpers_1 = require("../../utils/helpers");
 const web3storage_1 = require("../../utils/web3storage");
 const campaignService_1 = require("./campaignService");
-//import { createTransaction } from "./TransactionService";
+const TransactionService_1 = require("./TransactionService");
 const ethers = require("ethers");
 const abi = require("../../contract/ABI/fintrust");
 require("dotenv").config();
+const fintrustAddress = "0x2Df9063DaC57aC33544113eE3Ce1a2FA4D36fCB4";
+const provider = new ethers.providers.WebSocketProvider("wss://polygon-mumbai.g.alchemy.com/v2/R2WUD0JVyC7HXqRqPyQ1TeECHNm6JX7K");
+const contract = new ethers.Contract(fintrustAddress, abi, provider);
 function handleEvents() {
     return __awaiter(this, void 0, void 0, function* () {
-        const fintrustAddress = "0x2Df9063DaC57aC33544113eE3Ce1a2FA4D36fCB4";
-        const provider = new ethers.providers.WebSocketProvider("wss://polygon-mumbai.g.alchemy.com/v2/R2WUD0JVyC7HXqRqPyQ1TeECHNm6JX7K");
-        const contract = new ethers.Contract(fintrustAddress, abi, provider);
         contract.on("CampaignCreated", (campaignId, creator, url, timeStamp, campaignType, amount, event) => __awaiter(this, void 0, void 0, function* () {
             console.log("event fired");
             campaignId = campaignId.toString();
@@ -46,16 +48,21 @@ function handleEvents() {
             };
             yield (0, campaignService_1.createCampaign)(request);
         }));
-        // contract.on("Donated", async (campaignId, sender, timestamp, amount, event) => {
-        //     const request : CreateTransactionRequest= {
-        //         campaignId,
-        //         sender,
-        //         type: TransactionType.donate,
-        //         amount,
-        //         timeStamp: createDate(timestamp)
-        //     } 
-        //     await createTransaction(request);
-        // });
+        contract.on("Donated", (campaignId, sender, timestamp, amount, event) => __awaiter(this, void 0, void 0, function* () {
+            console.log("Donation called");
+            campaignId = campaignId.toString();
+            timestamp = timestamp.toString();
+            amount = amount.toString();
+            sender = sender.toString();
+            const request = {
+                campaignId,
+                sender,
+                type: enumerations_1.TransactionType.donate,
+                amount,
+                timeStamp: (0, helpers_1.createDate)(timestamp)
+            };
+            yield (0, TransactionService_1.createTransaction)(request);
+        }));
         // contract.on("WithDrawn", async (campaignId, sender, timestamp, amount, event) => {
         //     const request: CreateTransactionRequest = {
         //         campaignId,
@@ -69,3 +76,17 @@ function handleEvents() {
     });
 }
 exports.handleEvents = handleEvents;
+// async function syncCampaigns () {
+//     let campaigns  = await contract.getAllCampaigns();
+//     campaigns.forEach(async (x) => {
+//         let _id = x.campaignId.toString()
+//         let campaign = await campaignModel.findById({ _id });
+//         if (campaign){
+//             console.log(true);
+//         }
+//         else{
+//             console.log(false)
+//         }
+//     })
+// }
+// syncCampaigns();

@@ -10,8 +10,7 @@ export const withdrawRequestSchema = new Schema({
         required: true,
     },
     confirmations: {
-        type: number,
-        default: 0
+        type: Number,        
     },
     status: {
         type: TransactionState,

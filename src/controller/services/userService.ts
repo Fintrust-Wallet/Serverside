@@ -1,4 +1,4 @@
-const _user = require("../../models/userModel");
+import User from "../../models/userModel";
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 //Get types from expreeess -> response, request etc
@@ -11,91 +11,92 @@ async function validatePassword(passwordHash, plainPassword) {
     return await bcrypt.compare(plainPassword, passwordHash);
 }
 
-exports.signup = async (req, res, next) => {
-    try {
-        const { email, password, role, walletAddress } = req.body;
+// exports.signup = async (req, res, next) => {
+//     try {
+//         const { email, password, role, walletAddress } = req.body;
 
-        if (!walletAddress || !password) {
-            res.status(400).send("Wallet address and password are required!")
-        }
-        const passwordHash = await hashPassword(password);
+//         if (!walletAddress || !password) {
+//             res.status(400).send("Wallet address and password are required!")
+//         }
+//         const passwordHash = await hashPassword(password);
 
-        const newUser = new _user({
-            email,
-            _id: walletAddress,
-            password: passwordHash,
-            role: role || "visitor",
-        });
+//         const newUser = new User({
+//             email,
+//             _id: walletAddress,
+//             password: passwordHash,
+//             role: role || "visitor",
+//         });
 
-        const accessToken = jwt.sign(
-            {
-                userId: newUser._id,
-            },
-            process.env.JWT_SECRET,
-            { expiresIn: "1d" }
-        );
+//         const accessToken = jwt.sign(
+//             {
+//                 userId: newUser._id,
+//             },
+//             process.env.JWT_SECRET,
+//             { expiresIn: "1d" }
+//         );
 
-        newUser.accessToken = accessToken;
-        await newUser.save();
+//         newUser.accessToken = accessToken;
+//         await newUser.save();
 
-        res.json({
-            data: newUser,
-            accessToken,
-        });
-    } catch (err) {
-        next(err);
-    }
-};
+//         res.json({
+//             data: newUser,
+//             accessToken,
+//         });
+//     } catch (err) {
+//         next(err);
+//     }
+// };
 
-exports.authenticate = async (req, res, next) => {
-    const error = "Invalid Email or Password";
-    try {
-        const { password, email } = req.body;
+// exports.authenticate = async (req, res, next) => {
+//     const error = "Invalid Email or Password";
+//     try {
+//         const { password, email } = req.body;
 
-        let user = await _user.findOne({ email });
+//         let user = await User.findOne({ email });
 
-        if (!user) {
-            return next(new Error(error));
-        }
+//         if (!user) {
+//             return next(new Error(error));
+//         }
 
-        // validPassword = await validatePassword(user.password, password);
-        // const validPassword = "";
+//         // validPassword = await validatePassword(user.password, password);
+//         // const validPassword = "";
 
-        // if (!validPassword) {
-        //     return next(new Error(error));
-        // }
+//         // if (!validPassword) {
+//         //     return next(new Error(error));
+//         // }
 
-        const accessToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-            expiresIn: "1d",
-        });
+//         const accessToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+//             expiresIn: "1d",
+//         });
 
-        await _user.findByIdAndUpdate(user._id, { accessToken });
+//         await user.findByIdAndUpdate(user._id, { accessToken });
 
-        res.status(200).json({
-            data: { email: user.email, role: user.role },
-            accessToken,
-        });
-    } catch (err) {
-        next(err);
-    }
-};
+//         res.status(200).json({
+//             data: { email: user.email, role: user.role },
+//             accessToken,
+//         });
+//     } catch (err) {
+//         next(err);
+//     }
+// };
 
 //Current
 exports.login = async (req, res, next) => {
     try {
+        console.log(User, "USER")
         const { walletAddress } = req.body;
         //Validate wallet Address
-        let currentUser = await _user.findById(walletAddress);
+       let currentUser = await User.findById(walletAddress);
        
         if (!currentUser) {
-            currentUser = new _user({
+            currentUser = new User({
                 _id: walletAddress
             });
             currentUser = await currentUser.save();
         }
 
         const accessToken = jwt.sign({ walletAddress }, process.env.JWT_SECRET, { expiresIn: "1d" })
-        await _user.findByIdAndUpdate(currentUser._id, { accessToken });
+        await User.findByIdAndUpdate(currentUser._id, { accessToken });
 
         res.status(200).json({
             data: currentUser,
@@ -120,7 +121,7 @@ exports.updateProfile = async (req, res, next) => {
         }
 
         try {
-            const user = await _user.findByIdAndUpdate({
+            const user = await User.findByIdAndUpdate({
                 _id: walletAddress
             }, { email, userName, withdrawAccount, role: "user" });
 
