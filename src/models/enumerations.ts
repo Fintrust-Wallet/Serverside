@@ -1,29 +1,37 @@
 export enum CampaignType {
-    individual = 1,
-    public = 2
+    Individual = "individual",
+    Public = "public"
+}
+
+export enum Role {
+    User = "user",
+    Visitor = "visitor",
+    Admin = "admin"
 }
 
 export enum CampaignState {
-    created,
-    withdrawRequested
+    Inactive = "inactive",
+    Active = "active",
+    TargetReached = "targetReached",
+    Ended = "ended"
 }
 
 export enum TransactionType {
-    withdraw = 1,
-    donate = 2
+    Withdraw = "withdraw",
+    Donate = "donate"
 }
 
 export enum TransactionState {
-    pending = 1,
-    cancelled = 2,
-    completed = 3
+    Pending = "pending",
+    Cancelled = "cancelled",
+    Completed = "completed"
 }
 
 export enum Token {
-    Matic
+    Matic = "matic"
 }
 
 export enum Network {
-    Polygon
+    Polygon = "polygon"
 }
 

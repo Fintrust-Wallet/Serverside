@@ -28,20 +28,29 @@ Token: 0x1B33d4Ab4FaA951cb0d759be6284e5A74e37A1CD
  - Deposit to a campaign
 
 
-
-
 Relationships
 
-A campaign has embedded transactions (Denormalization)✅
+A campaign has list of transaction Ids(Normalization)
+A campaign has list of WithdrawRequest Ids(Normalization)
+A campaign has a conditional list of User Ids (signatories)(Normalization)
 A campaign has userId (Normalization)✅
 
-A user has an embedded array of transactions (Denormalization)✅
+A user has an array of transaction Ids (Normalization)✅
+A user has an array of Campaign Ids (Normalization)✅
 
+A transaction will have a hybrid stuff with (UserID, campaign id, campaign title, campaign target)✅
+A withdrawRequest has userId and CampaignId (Normalization)✅
 
-A transaction will have a hybrid stuff with (campaign id, campaign title, campaign target)✅
 
 Note
-If the data is mostly read and does not change quickly, we should probably embed. If the data is updated frequently, we should probably reference.
+If an entiity cannot exist without another entity, then we can embed it
+If an entity can exist by itself then we shoudnt embed it i.e we can have situations where we need to query an entity A or get all occurences of an entity A in the DB, then we cannot embed entity A in another entity B.
+
+If the data is mostly read and does not change quickly, we should probably embed. 
+If the data is updated frequently, we should probably reference.
+Sorting an embedded document will take longer and is not efficient
+
+
 
 
 //To Do 
@@ -52,3 +61,15 @@ after the contract event has triggered the server to create a campaign, we will 
 - There is a method callable by only admin that will whitelist multiple users. After you register, you hvae to wait for a period for verification, to be able to create campaigns etc
 - logger to automatically run functions like => Create a campaign, Create a transaction
 - Enums in transaction should be strings for easy readability
+- Hash user wallet Address
+- How will admin signup
+- Add Role management system as a middleware
+- Add Helmet
+ 
+
+ Question:
+ Best way to set and fetch images for mongodb
+ How to write the schema for that
+
+ Reference:
+ Schema Validation: https://mongoosejs.com/docs/validation.html

@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import { transactionSchema } from "./TransactionModel";
+import { Role } from "./enumerations";
 
 export const userSchema = new Schema({
     email: {
@@ -8,11 +9,11 @@ export const userSchema = new Schema({
         unique: true
     },
     _id: {
-        type: String,        
-        trim: true,        
+        type: String,
+        trim: true,
     },
     withdrawAccount: {
-        type: String,        
+        type: String,
         trim: true
     },
     userName: {
@@ -22,8 +23,8 @@ export const userSchema = new Schema({
     },
     role: {
         type: String,
-        default: "visitor",
-        enum: ["visitor", "user", "admin"],
+        default: Object.values(Role)[Role.Visitor],
+        enum: Object.values(Role),
     },
     accessToken: {
         type: String,
@@ -39,7 +40,18 @@ export const userSchema = new Schema({
     totalCampaignsCreated: {
         type: Number
     },
-    transactions: [transactionSchema],
+    transactions: {
+        type: [{
+            type: Schema.Types.ObjectId,
+            ref: "Transaction"
+        }]
+    },
+    campaigns: {
+        type: [{
+            type: String,
+            ref: "Campaign"
+        }]
+    }, 
     createdAt: {
         type: String,
         default: Date.now().toLocaleString()
@@ -47,7 +59,7 @@ export const userSchema = new Schema({
     updatedAt: {
         type: String,
         default: Date.now().toLocaleString()
-    },  
+    },
 });
 
 export default mongoose.model("User", userSchema);

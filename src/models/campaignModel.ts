@@ -1,11 +1,10 @@
 import mongoose, { Schema, model } from "mongoose";
 import { CampaignState, CampaignType } from "./enumerations";
-import { transactionSchema } from "./TransactionModel";
 
 export const campaignSchema = new Schema({
     _id: {
-        type: String,       
-        trim: true        
+        type: String,
+        trim: true
     },
     title: {
         type: String,
@@ -16,14 +15,14 @@ export const campaignSchema = new Schema({
     description: {
         type: String,
         required: true,
-        trim: true
+        trim: true,
+        unique: true
     },
     media: {
         type: [String],
         required: false
     },
     userId: {
-       // type: mongoose.Schema.Types.ObjectId,
         type: String,
         ref: "User",
         required: true
@@ -35,27 +34,44 @@ export const campaignSchema = new Schema({
         unique: true
     },
     signatories: {
-        type: [String],
-        trim: true
+        type: [{
+            _id: {
+                type: String,
+                trim: true,
+                ref: "User"
+            }
+        }],
+        required: function () {
+            return this.campaignType.toLowerCase() === "public"
+        }
     },
     balance: Number,
     deposited: Number,
     amount: Number,
+    IsWithdrawRequested: Boolean,
     withdrawAccount: {
         type: String,
         trim: true
     },
     state: {
-        type: Number,
-        default: CampaignState.created,
-        enum: CampaignState
+        type: String,
+        required: [true, "No campaign state?"],
+        default: Object.values(CampaignState)[CampaignState.Active],
+        enum: Object.values(CampaignState)
     },
     campaignType: {
-        type: Number,
+        type: String,
         required: true,
-        enum: CampaignType
+        enum: Object.values(CampaignType)
     },
-   transactions: [transactionSchema],
+    transactions: [{
+        type: Schema.Types.ObjectId,
+        ref: "Transaction"
+    }],
+    withrawRequests: [{
+        type: Schema.Types.ObjectId,
+        ref: "WithdrawRequest"
+    }],
     createdAt: {
         type: String,
         default: Date.now().toLocaleString()

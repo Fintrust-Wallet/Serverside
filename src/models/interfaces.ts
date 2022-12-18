@@ -44,7 +44,7 @@ export class Signer {
     /**
      *
      */
-    constructor(_userId) {
+    constructor(_userId: string) {
         this.userId = _userId;        
         this.hasVoted = false;
         this.confirmed = false;

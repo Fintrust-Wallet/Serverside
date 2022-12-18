@@ -1,32 +1,38 @@
-import { number } from "joi";
 import mongoose, { Schema } from "mongoose";
-import { TransactionState, TransactionType } from "./enumerations";
-import { Signer } from "./interfaces";
+import { TransactionState } from "./enumerations";
 
 export const withdrawRequestSchema = new Schema({
     campaign: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: "Campaign",
         required: true,
     },
-    confirmations: {
-        type: Number,        
+    creator: {
+        type: String,
+        ref: "User",
+        required: true,
     },
     status: {
-        type: TransactionState,
-        default: TransactionState.pending
-    },    
+        type: String,
+        enum: Object.values(TransactionState),
+        default: Object.values(TransactionState)[TransactionState.Pending]
+    },
     createdAt: {
-        type: Date,
+        type: String,
         default: Date.now().toLocaleString()
     },
     updatedAt: {
-        type: Date,
+        type: String,
         default: Date.now().toLocaleString()
     },
     signers: {
-        type: [Signer]
-    }   
+        type: [{
+            _id: { type: String, ref: "User", required: true },
+            email: { type: String, required: true },
+            hasVoted: { type: Boolean, required: true },
+            confirmed: { type: Boolean, required: true }
+        }]
+    }
 });
 
 export default mongoose.model("WithdrawRequest", withdrawRequestSchema);

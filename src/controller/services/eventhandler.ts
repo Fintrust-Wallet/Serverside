@@ -16,53 +16,53 @@ const provider = new ethers.providers.WebSocketProvider("wss://polygon-mumbai.g.
 
 const contract = new ethers.Contract(fintrustAddress, abi, provider);
 
-export async function handleEvents () {
+export async function handleEvents() {
 
     contract.on("CampaignCreated", async (campaignId, creator, url, timeStamp, campaignType, amount, event) => {
         console.log("event fired");
         campaignId = campaignId.toString();
         timeStamp = timeStamp.toString();
-        amount = amount.toString(); 
+        amount = amount.toString();
         creator = creator.toString();
 
-       //Use url to get the signatories!
-       const campaignInfo = await getFiles(url);        
+        //Use url to get the signatories!
+        const campaignInfo = await getFiles(url);
 
-       if (campaignInfo == null){
-        throw new Error("Campaign details not found!\n Did you send a correct CID to the smart contract?")
-       }
+        if (campaignInfo == null) {
+            throw new Error("Campaign details not found!\n Did you send a correct CID to the smart contract?")
+        }
 
-        const request : CreateCampaignRequest = {
+        const request: CreateCampaignRequest = {
             campaignId,
             creator,
             url,
             amount,
             campaignType,
             timeStamp,
-            signatories : [],
-            title : campaignInfo.campaignTitle,
-            description : campaignInfo.campaignDescription,
-            media: campaignInfo.images            
-        };       
+            signatories: [],
+            title: campaignInfo.campaignTitle,
+            description: campaignInfo.campaignDescription,
+            media: campaignInfo.images
+        };
 
-        await createCampaign(request);   
+        await createCampaign(request);
     })
 
     contract.on("Donated", async (campaignId, sender, timestamp, amount, event) => {
-        console.log("Donation called");       
+        console.log("Donation called");
 
         campaignId = campaignId.toString();
         timestamp = timestamp.toString();
         amount = amount.toString();
         sender = sender.toString();
 
-        const request : CreateTransactionRequest= {
+        const request: CreateTransactionRequest = {
             campaignId,
             sender,
-            type: TransactionType.donate,
+            type: TransactionType.Donate,
             amount,
             timeStamp: createDate(timestamp)
-        } 
+        }
 
         await createTransaction(request);
     });
