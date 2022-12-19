@@ -18,8 +18,8 @@ const TransactionService_1 = require("./TransactionService");
 const ethers = require("ethers");
 const abi = require("../../contract/ABI/fintrust");
 require("dotenv").config();
-const fintrustAddress = "0x2Df9063DaC57aC33544113eE3Ce1a2FA4D36fCB4";
-const provider = new ethers.providers.WebSocketProvider("wss://polygon-mumbai.g.alchemy.com/v2/R2WUD0JVyC7HXqRqPyQ1TeECHNm6JX7K");
+const fintrustAddress = process.env.FINTRUST_ADDRESS;
+const provider = new ethers.providers.WebSocketProvider(process.env.WEB_SOCKET);
 const contract = new ethers.Contract(fintrustAddress, abi, provider);
 function handleEvents() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -46,6 +46,7 @@ function handleEvents() {
                 description: campaignInfo.campaignDescription,
                 media: campaignInfo.images
             };
+            console.log(request, "CreateCampainRequest");
             yield (0, campaignService_1.createCampaign)(request);
         }));
         contract.on("Donated", (campaignId, sender, timestamp, amount, event) => __awaiter(this, void 0, void 0, function* () {

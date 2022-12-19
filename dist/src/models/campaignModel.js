@@ -57,7 +57,6 @@ exports.campaignSchema = new mongoose_1.Schema({
     },
     state: {
         type: String,
-        required: [true, "No campaign state?"],
         default: Object.values(enumerations_1.CampaignState)[enumerations_1.CampaignState.Active],
         enum: Object.values(enumerations_1.CampaignState)
     },

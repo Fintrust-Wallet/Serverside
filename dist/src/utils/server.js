@@ -8,6 +8,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SetupServer = void 0;
 const eventhandler_1 = require("../controller/services/eventhandler");
@@ -16,7 +19,7 @@ const express = require("express");
 const expressPino = require("express-pino-logger");
 const bodyParser = require("body-parser");
 const jwt = require("jsonwebtoken");
-const User = require("../models/userModel");
+const userModel_1 = __importDefault(require("../models/userModel"));
 const logger = require("./logger");
 const routes = require("../routes");
 const { secrets: { PORT } } = require("../config/env");
@@ -63,7 +66,7 @@ class SetupServer {
                         error: "JWT token has expired, please login to obtain a new one",
                     });
                 }
-                res.locals.loggedInUser = yield User.findOne({ _id: walletAddress });
+                res.locals.loggedInUser = yield userModel_1.default.findOne({ _id: walletAddress });
                 next();
             }
             else {

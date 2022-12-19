@@ -8,21 +8,24 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getMyCreatedCampaigns = exports.getMySignatoryCampaigns = exports.getCampaigns = exports.getACampaign = exports.createCampaign = void 0;
-const campaignModel = require("../../models/campaignModel");
+const campaignModel_1 = __importDefault(require("../../models/campaignModel"));
+const enumerations_1 = require("../../models/enumerations");
 const createCampaign = (request, signatories = []) => __awaiter(void 0, void 0, void 0, function* () {
-    const campaign = new campaignModel({
+    const campaign = new campaignModel_1.default({
         _id: request.campaignId,
         userId: request.creator,
         uri: request.url,
         amount: request.amount,
-        type: request.campaignType,
+        campaignType: Object.values(enumerations_1.CampaignType)[request.campaignType],
         signatories: signatories,
         description: request.description,
         title: request.title,
-        media: request.media,
-        campaignType: request.campaignType
+        media: request.media
     });
     return yield campaign.save();
 });
@@ -32,7 +35,7 @@ const getACampaign = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         const { id } = req.params;
         if (!id)
             return res.status(400).send("Invalid Campaign Id");
-        const campaign = yield campaignModel.findById(id);
+        const campaign = yield campaignModel_1.default.findById(id);
         if (!campaign)
             return res.status(404).send("Campaign not found");
         return res.status(200).send(campaign);
@@ -47,7 +50,7 @@ const getCampaigns = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         const { pageNumber, pageSize, searchQuery } = req.query;
         if (searchQuery) {
             //Find where search query is in title or description
-            const campaigns = yield campaignModel.find({
+            const campaigns = yield campaignModel_1.default.find({
                 $or: [
                     { title: /.*${searchQuery}.*/i },
                     { description: /.*${searchQuery}.*/i }
@@ -58,7 +61,7 @@ const getCampaigns = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
                 .limit(pageSize);
             return res.status(200).send(campaigns);
         }
-        return res.status(200).send(yield campaignModel.find());
+        return res.status(200).send(yield campaignModel_1.default.find());
     }
     catch (err) {
         next(err);
@@ -71,7 +74,7 @@ const getMySignatoryCampaigns = (req, res, next) => __awaiter(void 0, void 0, vo
         const { address } = req.params;
         const currentUser = req.user;
         if (searchQuery) {
-            const campaigns = yield campaignModel.find({
+            const campaigns = yield campaignModel_1.default.find({
                 signatories: currentUser._id,
                 $or: [
                     { title: /.*${searchQuery}.*/i },
@@ -83,7 +86,7 @@ const getMySignatoryCampaigns = (req, res, next) => __awaiter(void 0, void 0, vo
                 .limit(pageSize);
             return res.status(200).send(campaigns);
         }
-        return res.status(200).send(yield campaignModel.find({
+        return res.status(200).send(yield campaignModel_1.default.find({
             signatories: currentUser._id
         }));
     }
@@ -99,7 +102,7 @@ const getMyCreatedCampaigns = (req, res, next) => __awaiter(void 0, void 0, void
         const { address } = req.params;
         const currentUser = req.user;
         if (searchQuery) {
-            const campaigns = yield campaignModel.find({
+            const campaigns = yield campaignModel_1.default.find({
                 userId: currentUser._id,
                 $or: [
                     { title: /.*${searchQuery}.*/i },
@@ -111,7 +114,7 @@ const getMyCreatedCampaigns = (req, res, next) => __awaiter(void 0, void 0, void
                 .limit(pageSize);
             return res.status(200).send(campaigns);
         }
-        return res.status(200).send(yield campaignModel.find({
+        return res.status(200).send(yield campaignModel_1.default.find({
             userId: address
         }));
     }
@@ -120,3 +123,4 @@ const getMyCreatedCampaigns = (req, res, next) => __awaiter(void 0, void 0, void
     }
 });
 exports.getMyCreatedCampaigns = getMyCreatedCampaigns;
+console.log(Object.values(enumerations_1.CampaignType)["1"], "THISS");
