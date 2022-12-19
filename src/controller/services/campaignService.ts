@@ -1,4 +1,5 @@
-const campaignModel = require("../../models/campaignModel");
+import campaignModel from "../../models/campaignModel";
+import { CampaignType } from "../../models/enumerations";
 import { CreateCampaignRequest } from "../../models/interfaces";
 
 export const createCampaign = async (request: CreateCampaignRequest, signatories: string[] = []) => { 
@@ -7,12 +8,11 @@ export const createCampaign = async (request: CreateCampaignRequest, signatories
         userId: request.creator,
         uri: request.url,
         amount: request.amount,
-        type: request.campaignType,
+        campaignType: Object.values(CampaignType)[request.campaignType],
         signatories: signatories,
         description: request.description,
         title: request.title,
-        media: request.media,
-        campaignType: request.campaignType
+        media: request.media      
     });
 
     return await campaign.save();
@@ -125,3 +125,5 @@ export const getMyCreatedCampaigns = async (req, res, next) => {
         next(error)
     }
 }
+
+console.log(Object.values(CampaignType)["1"], "THISS")
