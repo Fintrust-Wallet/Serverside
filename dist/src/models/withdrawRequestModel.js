@@ -26,30 +26,37 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.withdrawRequestSchema = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
 const enumerations_1 = require("./enumerations");
-const interfaces_1 = require("./interfaces");
 exports.withdrawRequestSchema = new mongoose_1.Schema({
     campaign: {
-        type: mongoose_1.default.Schema.Types.ObjectId,
+        type: String,
         ref: "Campaign",
         required: true,
     },
-    confirmations: {
-        type: Number,
+    creator: {
+        type: String,
+        ref: "User",
+        required: true,
     },
     status: {
-        type: enumerations_1.TransactionState,
-        default: enumerations_1.TransactionState.pending
+        type: String,
+        enum: Object.values(enumerations_1.TransactionState),
+        default: Object.values(enumerations_1.TransactionState)[enumerations_1.TransactionState.Pending]
     },
     createdAt: {
-        type: Date,
+        type: String,
         default: Date.now().toLocaleString()
     },
     updatedAt: {
-        type: Date,
+        type: String,
         default: Date.now().toLocaleString()
     },
     signers: {
-        type: [interfaces_1.Signer]
+        type: [{
+                _id: { type: String, ref: "User", required: true },
+                email: { type: String, required: true },
+                hasVoted: { type: Boolean, required: true },
+                confirmed: { type: Boolean, required: true }
+            }]
     }
 });
 exports.default = mongoose_1.default.model("WithdrawRequest", exports.withdrawRequestSchema);

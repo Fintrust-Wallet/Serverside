@@ -25,7 +25,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userSchema = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
-const TransactionModel_1 = require("./TransactionModel");
+const enumerations_1 = require("./enumerations");
 exports.userSchema = new mongoose_1.Schema({
     email: {
         type: String,
@@ -47,8 +47,8 @@ exports.userSchema = new mongoose_1.Schema({
     },
     role: {
         type: String,
-        default: "visitor",
-        enum: ["visitor", "user", "admin"],
+        default: Object.values(enumerations_1.Role)[enumerations_1.Role.Visitor],
+        enum: Object.values(enumerations_1.Role),
     },
     accessToken: {
         type: String,
@@ -64,7 +64,18 @@ exports.userSchema = new mongoose_1.Schema({
     totalCampaignsCreated: {
         type: Number
     },
-    transactions: [TransactionModel_1.transactionSchema],
+    transactions: {
+        type: [{
+                type: mongoose_1.Schema.Types.ObjectId,
+                ref: "Transaction"
+            }]
+    },
+    campaigns: {
+        type: [{
+                type: String,
+                ref: "Campaign"
+            }]
+    },
     createdAt: {
         type: String,
         default: Date.now().toLocaleString()

@@ -31,7 +31,7 @@ exports.transactionSchema = new mongoose_1.Schema({
         type: String,
         ref: "User",
         required: true,
-        trim: true //add user email or wallet address
+        trim: true
     },
     campaign: {
         type: String,
@@ -46,25 +46,30 @@ exports.transactionSchema = new mongoose_1.Schema({
         default: Date.now().toLocaleString()
     },
     type: {
-        type: Number,
-        default: enumerations_1.TransactionType.donate,
-        enum: enumerations_1.TransactionType
+        type: String,
+        default: Object.values(enumerations_1.TransactionType)[enumerations_1.TransactionType.Donate],
+        enum: Object.values(enumerations_1.TransactionType),
+        required: true
     },
-    amount: Number,
-    state: {
+    amount: {
         type: Number,
-        default: enumerations_1.TransactionState.pending,
-        enum: enumerations_1.TransactionState
+        min: [0, "Must be graeter than 0"],
+        required: true
+    },
+    state: {
+        type: String,
+        default: Object.values(enumerations_1.TransactionState)[enumerations_1.TransactionState.Pending],
+        enum: Object.values(enumerations_1.TransactionState)
     },
     token: {
-        type: Number,
-        default: enumerations_1.Token.Matic,
-        enum: enumerations_1.Token
+        type: String,
+        default: Object.values(enumerations_1.Token)[enumerations_1.Token.Matic],
+        enum: Object.values(enumerations_1.Token)
     },
     network: {
-        type: Number,
-        default: enumerations_1.Network.Polygon,
-        enum: enumerations_1.Network
+        type: String,
+        default: Object.values(enumerations_1.Network)[enumerations_1.Network.Polygon],
+        enum: Object.values(enumerations_1.Network)
     }
 });
 exports.default = mongoose_1.default.model("Transaction", exports.transactionSchema);

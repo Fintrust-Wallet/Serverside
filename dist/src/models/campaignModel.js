@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.campaignSchema = void 0;
 const mongoose_1 = require("mongoose");
 const enumerations_1 = require("./enumerations");
-const TransactionModel_1 = require("./TransactionModel");
 exports.campaignSchema = new mongoose_1.Schema({
     _id: {
         type: String,
@@ -18,14 +17,14 @@ exports.campaignSchema = new mongoose_1.Schema({
     description: {
         type: String,
         required: true,
-        trim: true
+        trim: true,
+        unique: true
     },
     media: {
         type: [String],
         required: false
     },
     userId: {
-        // type: mongoose.Schema.Types.ObjectId,
         type: String,
         ref: "User",
         required: true
@@ -37,27 +36,44 @@ exports.campaignSchema = new mongoose_1.Schema({
         unique: true
     },
     signatories: {
-        type: [String],
-        trim: true
+        type: [{
+                _id: {
+                    type: String,
+                    trim: true,
+                    ref: "User"
+                }
+            }],
+        required: function () {
+            return this.campaignType.toLowerCase() === "public";
+        }
     },
     balance: Number,
     deposited: Number,
     amount: Number,
+    IsWithdrawRequested: Boolean,
     withdrawAccount: {
         type: String,
         trim: true
     },
     state: {
-        type: Number,
-        default: enumerations_1.CampaignState.created,
-        enum: enumerations_1.CampaignState
+        type: String,
+        required: [true, "No campaign state?"],
+        default: Object.values(enumerations_1.CampaignState)[enumerations_1.CampaignState.Active],
+        enum: Object.values(enumerations_1.CampaignState)
     },
     campaignType: {
-        type: Number,
+        type: String,
         required: true,
-        enum: enumerations_1.CampaignType
+        enum: Object.values(enumerations_1.CampaignType)
     },
-    transactions: [TransactionModel_1.transactionSchema],
+    transactions: [{
+            type: mongoose_1.Schema.Types.ObjectId,
+            ref: "Transaction"
+        }],
+    withrawRequests: [{
+            type: mongoose_1.Schema.Types.ObjectId,
+            ref: "WithdrawRequest"
+        }],
     createdAt: {
         type: String,
         default: Date.now().toLocaleString()

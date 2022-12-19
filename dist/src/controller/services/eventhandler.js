@@ -57,7 +57,7 @@ function handleEvents() {
             const request = {
                 campaignId,
                 sender,
-                type: enumerations_1.TransactionType.donate,
+                type: enumerations_1.TransactionType.Donate,
                 amount,
                 timeStamp: (0, helpers_1.createDate)(timestamp)
             };

@@ -1,43 +1,40 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Network =
-  exports.Token =
-  exports.TransactionState =
-  exports.TransactionType =
-  exports.CampaignState =
-  exports.CampaignType =
-    void 0;
+exports.Network = exports.Token = exports.TransactionState = exports.TransactionType = exports.CampaignState = exports.Role = exports.CampaignType = void 0;
 var CampaignType;
 (function (CampaignType) {
-  CampaignType[(CampaignType["individual"] = 1)] = "individual";
-  CampaignType[(CampaignType["public"] = 2)] = "public";
-})((CampaignType = exports.CampaignType || (exports.CampaignType = {})));
+    CampaignType["Individual"] = "individual";
+    CampaignType["Public"] = "public";
+})(CampaignType = exports.CampaignType || (exports.CampaignType = {}));
+var Role;
+(function (Role) {
+    Role["User"] = "user";
+    Role["Visitor"] = "visitor";
+    Role["Admin"] = "admin";
+})(Role = exports.Role || (exports.Role = {}));
 var CampaignState;
 (function (CampaignState) {
-  CampaignState[(CampaignState["created"] = 0)] = "created";
-  CampaignState[(CampaignState["withdrawRequested"] = 1)] = "withdrawRequested";
-})((CampaignState = exports.CampaignState || (exports.CampaignState = {})));
+    CampaignState["Inactive"] = "inactive";
+    CampaignState["Active"] = "active";
+    CampaignState["TargetReached"] = "targetReached";
+    CampaignState["Ended"] = "ended";
+})(CampaignState = exports.CampaignState || (exports.CampaignState = {}));
 var TransactionType;
 (function (TransactionType) {
-  TransactionType[(TransactionType["withdraw"] = 1)] = "withdraw";
-  TransactionType[(TransactionType["donate"] = 2)] = "donate";
-})(
-  (TransactionType = exports.TransactionType || (exports.TransactionType = {}))
-);
+    TransactionType["Withdraw"] = "withdraw";
+    TransactionType["Donate"] = "donate";
+})(TransactionType = exports.TransactionType || (exports.TransactionType = {}));
 var TransactionState;
 (function (TransactionState) {
-  TransactionState[(TransactionState["pending"] = 1)] = "pending";
-  TransactionState[(TransactionState["cancelled"] = 2)] = "cancelled";
-  TransactionState[(TransactionState["completed"] = 3)] = "completed";
-})(
-  (TransactionState =
-    exports.TransactionState || (exports.TransactionState = {}))
-);
+    TransactionState["Pending"] = "pending";
+    TransactionState["Cancelled"] = "cancelled";
+    TransactionState["Completed"] = "completed";
+})(TransactionState = exports.TransactionState || (exports.TransactionState = {}));
 var Token;
 (function (Token) {
-  Token[(Token["Matic"] = 0)] = "Matic";
-})((Token = exports.Token || (exports.Token = {})));
+    Token["Matic"] = "matic";
+})(Token = exports.Token || (exports.Token = {}));
 var Network;
 (function (Network) {
-  Network[(Network["Polygon"] = 0)] = "Polygon";
-})((Network = exports.Network || (exports.Network = {})));
+    Network["Polygon"] = "polygon";
+})(Network = exports.Network || (exports.Network = {}));
