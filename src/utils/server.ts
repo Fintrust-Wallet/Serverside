@@ -5,7 +5,7 @@ const express = require("express");
 const expressPino = require("express-pino-logger");
 const bodyParser = require("body-parser");
 const jwt = require("jsonwebtoken");
-const User = require("../models/userModel");
+import User from "../models/userModel";
 
 const logger = require("./logger");
 const routes = require("../routes");
