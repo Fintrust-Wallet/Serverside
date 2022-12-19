@@ -25,6 +25,7 @@ export const createTransaction = async (request: CreateTransactionRequest) => {
     user.transactions.push(transaction);    
 
     campaign.transactions.push(transaction);
+    await transaction.save();
     
     user.save();
     campaign.save();
