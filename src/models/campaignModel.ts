@@ -54,8 +54,7 @@ export const campaignSchema = new Schema({
         trim: true
     },
     state: {
-        type: String,
-        required: [true, "No campaign state?"],
+        type: String,        
         default: Object.values(CampaignState)[CampaignState.Active],
         enum: Object.values(CampaignState)
     },

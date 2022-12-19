@@ -86,8 +86,8 @@ exports.login = async (req, res, next) => {
         console.log(User, "USER")
         const { walletAddress } = req.body;
         //Validate wallet Address
-       let currentUser = await User.findById(walletAddress);
-       
+        let currentUser = await User.findById(walletAddress);
+
         if (!currentUser) {
             currentUser = new User({
                 _id: walletAddress
@@ -100,7 +100,7 @@ exports.login = async (req, res, next) => {
 
         res.status(200).json({
             data: currentUser,
-            newToken : accessToken,
+            newToken: accessToken,
         });
 
     } catch (error) {
@@ -125,7 +125,7 @@ exports.updateProfile = async (req, res, next) => {
                 _id: walletAddress
             }, { email, userName, withdrawAccount, role: "user" });
 
-            if (!user){
+            if (!user) {
                 res.status(400).json({
                     Status: false,
                     Message: "Invalid wallet address"
