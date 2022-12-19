@@ -1,18 +1,15 @@
-import { CampaignType, TransactionType } from "../../models/enumerations";
+import { TransactionType } from "../../models/enumerations";
 import { CreateCampaignRequest, CreateTransactionRequest } from "../../models/interfaces";
 import { createDate } from "../../utils/helpers";
 import { getFiles } from "../../utils/web3storage";
 import { createCampaign } from "./campaignService";
-import mongoose from "mongoose";
 import { createTransaction } from "./TransactionService";
-import campaignModel from "../../models/campaignModel";
-
 const ethers = require("ethers");
 const abi = require("../../contract/ABI/fintrust");
 require("dotenv").config();
 
-const fintrustAddress = "0x2Df9063DaC57aC33544113eE3Ce1a2FA4D36fCB4";
-const provider = new ethers.providers.WebSocketProvider("wss://polygon-mumbai.g.alchemy.com/v2/R2WUD0JVyC7HXqRqPyQ1TeECHNm6JX7K");
+const fintrustAddress = process.env.FINTRUST_ADDRESS;
+const provider = new ethers.providers.WebSocketProvider(process.env.WEB_SOCKET);
 
 const contract = new ethers.Contract(fintrustAddress, abi, provider);
 
@@ -44,6 +41,8 @@ export async function handleEvents() {
             description: campaignInfo.campaignDescription,
             media: campaignInfo.images
         };
+
+        console.log(request, "CreateCampainRequest");
 
         await createCampaign(request);
     })
