@@ -27,6 +27,12 @@ export enum TransactionState {
     Completed = "completed"
 }
 
+export enum WithdrawRequestState {
+    Pending = "pending",
+    Cancelled = "cancelled",
+    Completed = "completed"
+}
+
 export enum Token {
     Matic = "matic"
 }
