@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { TransactionState } from "./enumerations";
+import { WithdrawRequestState } from "./enumerations";
 
 export const withdrawRequestSchema = new Schema({
     campaign: {
@@ -14,8 +14,8 @@ export const withdrawRequestSchema = new Schema({
     },
     status: {
         type: String,
-        enum: Object.values(TransactionState),
-        default: Object.values(TransactionState)[TransactionState.Pending]
+        enum: Object.values(WithdrawRequestState),
+        default: Object.values(WithdrawRequestState)[WithdrawRequestState.Pending]
     },
     createdAt: {
         type: String,
