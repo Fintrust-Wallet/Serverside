@@ -36,6 +36,7 @@ const getACampaign = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         if (!id)
             return res.status(400).send("Invalid Campaign Id");
         const campaign = yield campaignModel_1.default.findById(id);
+        console.log(typeof campaign.signatories, "CAMPAIGN");
         if (!campaign)
             return res.status(404).send("Campaign not found");
         return res.status(200).send(campaign);

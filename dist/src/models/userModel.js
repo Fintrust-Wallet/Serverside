@@ -76,6 +76,12 @@ exports.userSchema = new mongoose_1.Schema({
                 ref: "Campaign"
             }]
     },
+    signatorycampaigns: {
+        type: [{
+                type: String,
+                ref: "Campaign"
+            }]
+    },
     createdAt: {
         type: String,
         default: Date.now().toLocaleString()

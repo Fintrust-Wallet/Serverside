@@ -73,3 +73,16 @@ after the contract event has triggered the server to create a campaign, we will 
 
  Reference:
  Schema Validation: https://mongoosejs.com/docs/validation.html
+
+
+ A user creates a public campaign
+ The user has 3 signatories
+
+I should be able to see all the withdraw requests for me
+
+For any campaign where I am a signatory, I should be able to see the withraw request attached
+
+//This is a good approach for the transaction request in My Portfolio Section
+A withdraw request should have a list of signatories
+For a logged in user, get all withdraw requests where my wallet address appears in the list of signatories
+

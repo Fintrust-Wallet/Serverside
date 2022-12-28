@@ -12,10 +12,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createTransaction = void 0;
+exports.createRequestWithdrawal = exports.createTransaction = void 0;
 const campaignModel_1 = __importDefault(require("../../models/campaignModel"));
 const TransactionModel_1 = __importDefault(require("../../models/TransactionModel"));
 const userModel_1 = __importDefault(require("../../models/userModel"));
+const withdrawRequestModel_1 = __importDefault(require("../../models/withdrawRequestModel"));
 const createTransaction = (request) => __awaiter(void 0, void 0, void 0, function* () {
     let campaign = yield campaignModel_1.default.findById({ _id: request === null || request === void 0 ? void 0 : request.campaignId });
     if (!campaign)
@@ -34,15 +35,34 @@ const createTransaction = (request) => __awaiter(void 0, void 0, void 0, functio
     campaign.transactions.push(transaction);
     user.save();
     campaign.save();
+    transaction.save();
 });
 exports.createTransaction = createTransaction;
+const createRequestWithdrawal = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { campaignId } = req.body;
+    let currentUser = req.user;
+    let campaign = yield (yield campaignModel_1.default.findById({ _id: campaignId })).populate("signatories");
+    if (!campaign)
+        throw new Error("Invalid CampaignId");
+    if (campaign.userId != currentUser._id)
+        throw new Error("Unauthorized Sender");
+    if (campaign.campaignType.toLowerCase() != "public") {
+        throw new Error("Individual Campaign does not need a withdraw request");
+    }
+    let withdrawRequest = new withdrawRequestModel_1.default({
+        campaign: campaignId,
+        signatories: campaign.signatories
+    });
+    withdrawRequest.save();
+});
+exports.createRequestWithdrawal = createRequestWithdrawal;
 // export const requestWithdrawal = async (request: CreateWithdrawRequestRequest) => {
-//     let campaign = await campaignModel.findById({ campaign: "campaignId" });
+//     let campaign = await campaignModel.findById({ _id: "campaignId" });
 //     if (!campaign)
 //         throw new Error("Invalid CampaignId");
 //     if (campaign.userId != request.sender)
 //         throw new Error("Unauthorized Sender");
-//     if (campaign.campaignType == 1) {
+//     if ((campaign.campaignType as string).toLowerCase() != "public") {
 //         throw new Error("Individual Campaign does not need a withdraw request");
 //     }
 //     let allowedSigners = [];

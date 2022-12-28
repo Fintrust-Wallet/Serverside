@@ -119,7 +119,6 @@ exports.updateProfile = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
             const user = yield userModel_1.default.findByIdAndUpdate({
                 _id: walletAddress
             }, { email, userName, withdrawAccount, role: "user" });
-            console.log(user, "HERE!!!");
             if (!user) {
                 res.status(400).json({
                     Status: false,

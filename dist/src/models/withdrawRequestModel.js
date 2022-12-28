@@ -39,8 +39,8 @@ exports.withdrawRequestSchema = new mongoose_1.Schema({
     },
     status: {
         type: String,
-        enum: Object.values(enumerations_1.TransactionState),
-        default: Object.values(enumerations_1.TransactionState)[enumerations_1.TransactionState.Pending]
+        enum: Object.values(enumerations_1.WithdrawRequestState),
+        default: Object.values(enumerations_1.WithdrawRequestState)[enumerations_1.WithdrawRequestState.Pending]
     },
     createdAt: {
         type: String,

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Network = exports.Token = exports.TransactionState = exports.TransactionType = exports.CampaignState = exports.Role = exports.CampaignType = void 0;
+exports.Network = exports.Token = exports.WithdrawRequestState = exports.TransactionState = exports.TransactionType = exports.CampaignState = exports.Role = exports.CampaignType = void 0;
 var CampaignType;
 (function (CampaignType) {
     CampaignType["Individual"] = "individual";
@@ -30,6 +30,12 @@ var TransactionState;
     TransactionState["Cancelled"] = "cancelled";
     TransactionState["Completed"] = "completed";
 })(TransactionState = exports.TransactionState || (exports.TransactionState = {}));
+var WithdrawRequestState;
+(function (WithdrawRequestState) {
+    WithdrawRequestState["Pending"] = "pending";
+    WithdrawRequestState["Cancelled"] = "cancelled";
+    WithdrawRequestState["Completed"] = "completed";
+})(WithdrawRequestState = exports.WithdrawRequestState || (exports.WithdrawRequestState = {}));
 var Token;
 (function (Token) {
     Token["Matic"] = "matic";
