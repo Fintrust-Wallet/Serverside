@@ -51,7 +51,13 @@ export const userSchema = new Schema({
             type: String,
             ref: "Campaign"
         }]
-    }, 
+    },
+    signatorycampaigns: {
+        type: [{
+            type: String,
+            ref: "Campaign"
+        }]
+    },    
     createdAt: {
         type: String,
         default: Date.now().toLocaleString()

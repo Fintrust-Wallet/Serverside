@@ -47,15 +47,11 @@ export const createRequestWithdrawal = async (req, res, next) => {
     }
 
     let allowedSigners = [];
+    let signatories = campaign.signatories as [typeof userModel] //cast to a list of campaignModels
 
-    // for (const user as User in campaign.signatories) {
-    //     allowedSigners.push({
-    //         _id: user._id,
-    //         email: user.email,
-    //         hasVoted: { type: Boolean, required: true },
-    //         confirmed: { type: Boolean, required: true }
-    //     })
-    // }
+    for (let user in signatories) { 
+        allowedSigners.push(user);
+    }
 
     let withdrawRequest = new withdrawRequestModel({
         campaign: campaignId,
@@ -65,34 +61,6 @@ export const createRequestWithdrawal = async (req, res, next) => {
 
     withdrawRequest.save();
 }
-
-// export const requestWithdrawal = async (request: CreateWithdrawRequestRequest) => {
-//     let campaign = await campaignModel.findById({ _id: "campaignId" });
-
-//     if (!campaign)
-//         throw new Error("Invalid CampaignId");
-
-//     if (campaign.userId != request.sender)
-//         throw new Error("Unauthorized Sender");
-
-//     if ((campaign.campaignType as string).toLowerCase() != "public") {
-//         throw new Error("Individual Campaign does not need a withdraw request");
-//     }
-
-//     let allowedSigners = [];
-
-//     for (const user in campaign.signatories) {
-//         allowedSigners.push(new Signer(user))
-//     }
-
-//     let withdrawRequest = new withdrawRequestModel({
-//         campaign: request.campaignId,
-//         signatories: campaign.signatories,
-//         signers: allowedSigners
-//     })
-
-//     withdrawRequest.save();
-// }
 
 // export const validateWithdrawalRequest = async (req, res, next) => {
 //     //Get a request
