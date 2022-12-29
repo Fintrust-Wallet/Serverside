@@ -126,4 +126,3 @@ export const getMyCreatedCampaigns = async (req, res, next) => {
     }
 }
 
-console.log(Object.values(CampaignType)["1"], "THISS")

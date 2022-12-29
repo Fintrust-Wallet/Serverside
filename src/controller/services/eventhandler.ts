@@ -6,6 +6,7 @@ import { createCampaign } from "./campaignService";
 import { createTransaction } from "./TransactionService";
 const ethers = require("ethers");
 const abi = require("../../contract/ABI/fintrust");
+const logger = require("../../utils/logger")
 require("dotenv").config();
 
 const fintrustAddress = process.env.FINTRUST_ADDRESS;
@@ -16,16 +17,18 @@ const contract = new ethers.Contract(fintrustAddress, abi, provider);
 export async function handleEvents() {
 
     contract.on("CampaignCreated", async (campaignId, creator, url, timeStamp, campaignType, amount, event) => {
-        console.log("event fired");
         campaignId = campaignId.toString();
         timeStamp = timeStamp.toString();
         amount = amount.toString();
         creator = creator.toString();
 
+        logger.info(`Create Campaign event fired by ${creator}`); 
+
         //Use url to get the signatories!
         const campaignInfo = await getFiles(url);
 
         if (campaignInfo == null) {
+            logger.Error("Error while saving campaign. Campaign details not found!");  
             throw new Error("Campaign details not found!\n Did you send a correct CID to the smart contract?")
         }
 
@@ -40,11 +43,11 @@ export async function handleEvents() {
             title: campaignInfo.campaignTitle,
             description: campaignInfo.campaignDescription,
             media: campaignInfo.images
-        };
-
-        console.log(request, "CreateCampainRequest");
+        };       
 
         await createCampaign(request);
+        logger.info("Campaign created successfully");        
+
     })
 
     contract.on("Donated", async (campaignId, sender, timestamp, amount, event) => {
@@ -55,6 +58,9 @@ export async function handleEvents() {
         amount = amount.toString();
         sender = sender.toString();
 
+        logger.info(`Donation event fired by Sender:${sender}`); 
+
+
         const request: CreateTransactionRequest = {
             campaignId,
             sender,
@@ -64,6 +70,8 @@ export async function handleEvents() {
         }
 
         await createTransaction(request);
+        logger.info("Donation saved successfully");       
+
     });
 
     // contract.on("WithDrawn", async (campaignId, sender, timestamp, amount, event) => {
