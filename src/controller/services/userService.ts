@@ -11,76 +11,7 @@ async function validatePassword(passwordHash, plainPassword) {
     return await bcrypt.compare(plainPassword, passwordHash);
 }
 
-// exports.signup = async (req, res, next) => {
-//     try {
-//         const { email, password, role, walletAddress } = req.body;
-
-//         if (!walletAddress || !password) {
-//             res.status(400).send("Wallet address and password are required!")
-//         }
-//         const passwordHash = await hashPassword(password);
-
-//         const newUser = new User({
-//             email,
-//             _id: walletAddress,
-//             password: passwordHash,
-//             role: role || "visitor",
-//         });
-
-//         const accessToken = jwt.sign(
-//             {
-//                 userId: newUser._id,
-//             },
-//             process.env.JWT_SECRET,
-//             { expiresIn: "1d" }
-//         );
-
-//         newUser.accessToken = accessToken;
-//         await newUser.save();
-
-//         res.json({
-//             data: newUser,
-//             accessToken,
-//         });
-//     } catch (err) {
-//         next(err);
-//     }
-// };
-
-// exports.authenticate = async (req, res, next) => {
-//     const error = "Invalid Email or Password";
-//     try {
-//         const { password, email } = req.body;
-
-//         let user = await User.findOne({ email });
-
-//         if (!user) {
-//             return next(new Error(error));
-//         }
-
-//         // validPassword = await validatePassword(user.password, password);
-//         // const validPassword = "";
-
-//         // if (!validPassword) {
-//         //     return next(new Error(error));
-//         // }
-
-//         const accessToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-//             expiresIn: "1d",
-//         });
-
-//         await user.findByIdAndUpdate(user._id, { accessToken });
-
-//         res.status(200).json({
-//             data: { email: user.email, role: user.role },
-//             accessToken,
-//         });
-//     } catch (err) {
-//         next(err);
-//     }
-// };
-
-//Current
+//Login
 exports.login = async (req, res, next) => {
     try {
         console.log(User, "USER")
@@ -108,6 +39,7 @@ exports.login = async (req, res, next) => {
     }
 }
 
+//Verification
 exports.updateProfile = async (req, res, next) => {
     try {
         const { userName, email, withdrawAccount } = req.body;

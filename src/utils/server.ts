@@ -9,19 +9,19 @@ import User from "../models/userModel";
 
 const logger = require("./logger");
 const routes = require("../routes");
-const {secrets: {PORT}} = require("../config/env");
+const { secrets: { PORT } } = require("../config/env");
 const { database } = require("../config/database");
 
 export class SetupServer {
     app = express();
     server;
-    port : number;
+    port: number;
 
     /*
      * same as this.port = port, declaring as private here will
      * add the port variable to the SetupServer instance
      */
-    constructor(port = PORT) {       
+    constructor(port = PORT) {
         this.port = port;
     }
 
@@ -53,17 +53,17 @@ export class SetupServer {
             })
         );
         this.app.use(async (req, res, next) => {
-            if (req.headers["x-access-token"]) {                
+            if (req.headers["x-access-token"]) {
                 const accessToken: string = req.headers["x-access-token"];
                 const { walletAddress, exp } = jwt.verify(accessToken, process.env.JWT_SECRET);
-                
+
                 // Check if token has expired
-                if (exp < Date.now().valueOf() / 1000) {                                       
+                if (exp < Date.now().valueOf() / 1000) {
                     return res.status(401).json({
                         error: "JWT token has expired, please login to obtain a new one",
                     });
                 }
-                res.locals.loggedInUser = await User.findOne({ _id : walletAddress });
+                res.locals.loggedInUser = await User.findOne({ _id: walletAddress });
                 next();
             } else {
                 next();
@@ -77,7 +77,7 @@ export class SetupServer {
             res.status(200).send({
                 message: "Welcome to Fintrust API",
             })
-        );        
+        );
         this.app.use("/v2.0/api", routes.userroutes);
         this.app.use("/v2.0/api", routes.campaignroutes.default); //I exported this as an es6 module
 
@@ -104,6 +104,7 @@ export class SetupServer {
             await new Promise((resolve, reject) => {
                 this.server.close((err) => {
                     if (err) {
+                        logger.error(err);
                         return reject(err);
                     }
                     resolve(true);
@@ -115,7 +116,7 @@ export class SetupServer {
     start() {
         this.server = this.app.listen(this.port || 4001, '0.0.0.0', async () => {
             logger.info("Server listening on port: " + this.port);
-            await handleEvents();            
+            await handleEvents();
         });
     }
 }
