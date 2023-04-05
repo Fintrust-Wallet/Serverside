@@ -1,7 +1,10 @@
 # Fintrust API
 
-Contract : 0x9600178ade94d8652241aE8c3D75B42Ff5Ac61B8
-Token: 0x1B33d4Ab4FaA951cb0d759be6284e5A74e37A1CD
+#### Contract : 0x9600178ade94d8652241aE8c3D75B42Ff5Ac61B8
+#### Token: 0x1B33d4Ab4FaA951cb0d759be6284e5A74e37A1CD
+
+## Written By
+[Female King Alex](https://github.com/king-Alex-d-great)
 
 ## Endpoints
 
