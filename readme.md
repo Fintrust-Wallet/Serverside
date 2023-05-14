@@ -1,10 +1,21 @@
 # Fintrust API
+Fintrust is a fundraising platform utilizing the blockchain to ensure massive societal change by enabling people create campaigns and donate funds. On the platform, funds donated are secure and records are transparent. Campaign creators have the tools needed to manage their campaigns, add in signatories and have it before the audience that’s needed.
+
+_______________
+
+## Author
+[Ogubuike Alex](https://github.com/king-Alex-d-great)
+
+## Tech Stack
+
+**Blockchain:** Solidity, Hardhat, ether
+
+**Server:** Typescript, Express, 
+
+## CAs
 
 #### Contract : 0x9600178ade94d8652241aE8c3D75B42Ff5Ac61B8
 #### Token: 0x1B33d4Ab4FaA951cb0d759be6284e5A74e37A1CD
-
-## Written By
-[Ogubuike Alex](https://github.com/king-Alex-d-great)
 
 ## Endpoints
 
