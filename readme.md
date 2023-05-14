@@ -8,9 +8,9 @@ _______________
 
 ## Tech Stack
 
-**Blockchain:** Solidity, Hardhat, ether
+**Blockchain:** Solidity, Hardhat, 
 
-**Server:** Typescript, Express, 
+**Server:** Typescript, Express, web3.storage, ethers, mongoDB
 
 ## CAs
 
@@ -49,28 +49,20 @@ _______________
 - Create a campaign
 - Deposit to a campaign
 
-Relationships
+#### Relationships
 
-A campaign has list of transaction Ids(Normalization)
-A campaign has list of WithdrawRequest Ids(Normalization)
-A campaign has a conditional list of User Ids (signatories)(Normalization)
-A campaign has userId (Normalization)✅
+- A campaign has list of transaction Ids(Normalization)
+- A campaign has list of WithdrawRequest Ids(Normalization)
+- A campaign has a conditional list of User Ids (signatories)(Normalization)
+- A campaign has userId (Normalization)✅
 
-A user has an array of transaction Ids (Normalization)✅
-A user has an array of Campaign Ids (Normalization)✅
+- A user has an array of transaction Ids (Normalization)✅
+- A user has an array of Campaign Ids (Normalization)✅
 
-A transaction will have a hybrid stuff with (UserID, campaign id, campaign title, campaign target)✅
-A withdrawRequest has userId and CampaignId (Normalization)✅
+- A transaction has a hybrid relationship with (UserID, campaign id, campaign title, campaign target)✅
+- A withdrawRequest has userId and CampaignId (Normalization)✅
 
-Note
-If an entiity cannot exist without another entity, then we can embed it
-If an entity can exist by itself then we shoudnt embed it i.e we can have situations where we need to query an entity A or get all occurences of an entity A in the DB, then we cannot embed entity A in another entity B.
-
-If the data is mostly read and does not change quickly, we should probably embed.
-If the data is updated frequently, we should probably reference.
-Sorting an embedded document will take longer and is not efficient
-
-//To Do
+#### Roadmap
 
 - Declare a wallet type and Add Validation for it
 - When a person selects public campaign from the FE, we collect the signatories and store also with the files on IPFS
