@@ -4,7 +4,7 @@
 #### Token: 0x1B33d4Ab4FaA951cb0d759be6284e5A74e37A1CD
 
 ## Written By
-[Female King Alex](https://github.com/king-Alex-d-great)
+[Ogubuike Alex](https://github.com/king-Alex-d-great)
 
 ## Endpoints
 
